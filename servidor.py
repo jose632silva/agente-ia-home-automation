@@ -41,6 +41,12 @@ def comando():
 def health():
     return jsonify({"status": "ok", "servico": "ARIA Backend com Agno"}), 200
 
+from flask import send_from_directory
+
+@app.route('/')
+def index():
+    return send_from_directory('.', 'aria_interface.html')
+
 if __name__ == "__main__":
     print("╔══════════════════════════════════════╗")
     print("║   ARIA — Servidor com Agno v2.0      ║")

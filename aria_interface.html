@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ARIA — Assistente Residencial Inteligente</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&family=Orbitron:wght@400;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #07071a;
@@ -19,1170 +16,939 @@
       --border: rgba(0, 224, 200, 0.12);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Exo 2', sans-serif;
-      height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
+    /* ─── HEADER ─── */
     .hdr {
       display: flex;
       align-items: center;
-      padding: 10px 24px;
+      padding: 8px 18px;
       border-bottom: 1px solid var(--border);
-      gap: 14px;
-      background: rgba(11, 11, 34, 0.95);
+      gap: 12px;
+      background: rgba(11, 11, 34, 0.97);
       backdrop-filter: blur(12px);
+      flex-shrink: 0;
+      z-index: 10;
     }
-
-    .hdr-logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 19px;
-      letter-spacing: 7px;
-      color: var(--teal);
-    }
-
-    .hdr-sub {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 2.5px;
-      margin-top: 1px;
-    }
-
+    .hdr-logo { font-family: 'Orbitron', sans-serif; font-size: 16px; letter-spacing: 6px; color: var(--teal); }
+    .hdr-sub { font-size: 9px; color: var(--muted); letter-spacing: 2px; margin-top: 1px; }
     .hdr-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--teal);
-      margin-left: auto;
-      animation: dotpulse 2s infinite;
+      width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
+      margin-left: auto; animation: dotpulse 2s infinite;
     }
+    @keyframes dotpulse { 0%,100%{opacity:1} 50%{opacity:.15} }
 
-    @keyframes dotpulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.15
-      }
-    }
-
+    /* ─── MAIN ─── */
     .main {
       display: flex;
       flex: 1;
       overflow: hidden;
+      min-height: 0;
     }
 
-    /* ─── CHARACTER PANEL ─── */
+    /* ═══════════════════════
+       CHARACTER PANEL — DESKTOP
+    ═══════════════════════ */
     .cpanel {
-      width: 310px;
-      min-width: 310px;
+      width: 290px;
+      min-width: 290px;
       background: var(--pl);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 14px 14px;
+      padding: 14px 12px;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
-
     .cpanel::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(0, 224, 200, 0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 224, 200, 0.022) 1px, transparent 1px);
+        linear-gradient(rgba(0,224,200,.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,224,200,.022) 1px, transparent 1px);
       background-size: 34px 34px;
       pointer-events: none;
     }
 
-    .cname {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 19px;
-      letter-spacing: 8px;
-      color: var(--teal);
-      margin-bottom: 2px;
-      position: relative;
-    }
-
-    .ctitle {
-      font-size: 9px;
-      letter-spacing: 2.5px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      position: relative;
-    }
+    .cname { font-family: 'Orbitron', sans-serif; font-size: 18px; letter-spacing: 8px; color: var(--teal); margin-bottom: 2px; position: relative; }
+    .ctitle { font-size: 9px; letter-spacing: 2.5px; color: var(--muted); margin-bottom: 8px; position: relative; }
 
     .cwrap {
       position: relative;
-      width: 220px;
-      height: 340px;
+      width: 200px;
+      height: 250px;
     }
 
     .char-svg {
       width: 100%;
       height: 100%;
       animation: float 4.2s ease-in-out infinite;
+      filter: drop-shadow(0 8px 32px rgba(0,224,200,0.10));
     }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0px);
-      }
-
-      50% {
-        transform: translateY(-8px);
-      }
-    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
 
     .glow-ring {
       position: absolute;
-      bottom: 8px;
-      left: 50%;
+      bottom: -10px; left: 50%;
       transform: translateX(-50%);
-      width: 148px;
-      height: 148px;
+      width: 130px; height: 130px;
       border-radius: 50%;
       border: 1.5px solid var(--teal);
       opacity: 0;
       transition: opacity 0.35s;
       pointer-events: none;
     }
-
     .glow-ring.on {
-      opacity: 0.55;
+      opacity: 0.5;
       animation: ringpulse 1.6s ease-in-out infinite;
     }
-
     @keyframes ringpulse {
-
-      0%,
-      100% {
-        transform: translateX(-50%) scale(1);
-        opacity: 0.55;
-      }
-
-      50% {
-        transform: translateX(-50%) scale(1.14);
-        opacity: 0.12;
-      }
+      0%,100%{transform:translateX(-50%) scale(1); opacity:.5}
+      50%{transform:translateX(-50%) scale(1.14); opacity:.1}
     }
 
     .sbadge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 14px;
-      border-radius: 20px;
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 14px; border-radius: 20px;
       border: 1px solid var(--border);
-      font-size: 9.5px;
-      letter-spacing: 2px;
+      font-size: 9px; letter-spacing: 2px;
       font-family: 'Orbitron', sans-serif;
       color: var(--muted);
-      background: rgba(0, 0, 0, 0.3);
-      transition: all 0.3s;
-      margin-top: 5px;
+      background: rgba(0,0,0,.3);
+      transition: all .3s;
+      margin-top: 6px;
       position: relative;
     }
-
-    .sbadge.listening {
-      border-color: var(--teal);
-      color: var(--teal);
-    }
-
-    .sbadge.speaking {
-      border-color: var(--purple);
-      color: var(--purple);
-    }
-
-    .sdot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-    }
+    .sbadge.listening { border-color: var(--teal); color: var(--teal); }
+    .sbadge.speaking  { border-color: var(--purple); color: var(--purple); }
+    .sdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
     .devices {
-      margin-top: 10px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+      margin-top: 10px; width: 100%;
+      display: flex; flex-direction: column; gap: 5px;
       position: relative;
     }
-
     .drow {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 11px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px;
+      background: rgba(0,0,0,.2);
+      border: 1px solid var(--border); border-radius: 7px;
       font-size: 11px;
     }
+    .dname { color: var(--muted); }
+    .dval { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--teal); }
+    .dval.off { color: var(--muted); }
 
-    .dname {
-      color: var(--muted);
-    }
-
-    .dval {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 10px;
-      color: var(--teal);
-    }
-
-    .dval.off {
-      color: var(--muted);
-    }
-
-    .api-cfg {
-      margin-top: 9px;
+    .api-cfg { margin-top: 8px; width: 100%; position: relative; }
+    .api-lbl { font-size: 9px; letter-spacing: 2px; color: var(--muted); margin-bottom: 3px; }
+    .api-cfg input, .api-cfg select {
       width: 100%;
-      position: relative;
-    }
-
-    .api-lbl {
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-
-    .api-cfg input,
-    .api-cfg select {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0,0,0,.3);
       border: 1px solid var(--border);
       color: var(--muted);
-      padding: 5px 9px;
-      border-radius: 5px;
-      font-size: 10px;
-      font-family: 'Exo 2', sans-serif;
-      outline: none;
-      transition: border-color 0.2s;
+      padding: 5px 9px; border-radius: 5px;
+      font-size: 10px; font-family: 'Exo 2', sans-serif;
+      outline: none; transition: border-color .2s;
+    }
+    .api-cfg input:focus, .api-cfg select:focus {
+      border-color: rgba(0,224,200,.3); color: var(--teal);
     }
 
-    .api-cfg input:focus,
-    .api-cfg select:focus {
-      border-color: rgba(0, 224, 200, 0.3);
-      color: var(--teal);
-    }
-
-    /* ─── CHAT PANEL ─── */
-    .chat {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: #080818;
+    /* ═══════════════════════
+       MOBILE CHARACTER STRIP
+    ═══════════════════════ */
+    .char-strip {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      background: var(--pl);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      position: relative;
       overflow: hidden;
     }
+    .char-strip::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,224,200,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,224,200,.018) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .strip-avatar {
+      width: 72px; height: 90px; flex-shrink: 0;
+      animation: float 4.2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 16px rgba(0,224,200,.12));
+    }
+    .strip-info { flex: 1; min-width: 0; }
+    .strip-name { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 5px; color: var(--teal); }
+    .strip-status { font-size: 9px; letter-spacing: 1.5px; color: var(--muted); margin-top: 1px; }
+    .strip-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 14px;
+      border: 1px solid var(--border);
+      font-size: 8px; letter-spacing: 1.5px;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--muted); background: rgba(0,0,0,.3);
+      transition: all .3s; margin-top: 5px;
+    }
+    .strip-badge.listening { border-color: var(--teal); color: var(--teal); }
+    .strip-badge.speaking  { border-color: var(--purple); color: var(--purple); }
+    .strip-devices {
+      display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    }
+    .strip-dev {
+      font-family: 'Orbitron', sans-serif; font-size: 8px;
+      padding: 2px 8px; border-radius: 10px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .strip-dev.on { border-color: rgba(0,224,200,.35); color: var(--teal); }
 
+    /* ─── CHAT ─── */
+    .chat {
+      flex: 1; display: flex; flex-direction: column;
+      background: #080818; overflow: hidden; min-width: 0;
+    }
     .msgs {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 20px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 12px;
     }
+    .msgs::-webkit-scrollbar { width: 3px; }
+    .msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .msgs::-webkit-scrollbar {
-      width: 3px;
-    }
-
-    .msgs::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
-
-    .msg {
-      display: flex;
-      gap: 9px;
-      max-width: 84%;
-      animation: fadein 0.28s ease;
-    }
-
-    @keyframes fadein {
-      from {
-        opacity: 0;
-        transform: translateY(9px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
-    }
-
-    .msg.user {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-
-    .msg.assistant {
-      align-self: flex-start;
-    }
+    .msg { display: flex; gap: 8px; max-width: 88%; animation: fadein .28s ease; }
+    @keyframes fadein { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .msg.user      { align-self: flex-end;   flex-direction: row-reverse; }
+    .msg.assistant { align-self: flex-start; }
 
     .mav {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 9px;
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', sans-serif; font-size: 8px;
     }
+    .msg.user      .mav { background: rgba(155,124,224,.10); border: 1px solid rgba(155,124,224,.28); color: var(--purple); }
+    .msg.assistant .mav { background: rgba(0,224,200,.08);  border: 1px solid rgba(0,224,200,.22);  color: var(--teal); }
 
-    .msg.user .mav {
-      background: rgba(155, 124, 224, 0.1);
-      border: 1px solid rgba(155, 124, 224, 0.28);
-      color: var(--purple);
-    }
+    .mbub { padding: 9px 13px; font-size: 13px; line-height: 1.65; }
+    .msg.user      .mbub { background: #131c38; border: 1px solid rgba(155,124,224,.16); border-radius: 12px 3px 12px 12px; }
+    .msg.assistant .mbub { background: #0b1424; border: 1px solid rgba(0,224,200,.11);  border-radius: 3px 12px 12px 12px; }
+    .mtime { font-size: 9px; color: var(--muted); margin-top: 3px; padding: 0 2px; }
+    .msg.user .mtime { text-align: right; }
 
-    .msg.assistant .mav {
-      background: rgba(0, 224, 200, 0.08);
-      border: 1px solid rgba(0, 224, 200, 0.22);
-      color: var(--teal);
-    }
-
-    .mbub {
-      padding: 10px 14px;
-      font-size: 13.5px;
-      line-height: 1.65;
-    }
-
-    .msg.user .mbub {
-      background: #131c38;
-      border: 1px solid rgba(155, 124, 224, 0.16);
-      border-radius: 12px 3px 12px 12px;
-    }
-
-    .msg.assistant .mbub {
-      background: #0b1424;
-      border: 1px solid rgba(0, 224, 200, 0.11);
-      border-radius: 3px 12px 12px 12px;
-    }
-
-    .mtime {
-      font-size: 9.5px;
-      color: var(--muted);
-      margin-top: 3px;
-      padding: 0 2px;
-    }
-
-    .msg.user .mtime {
-      text-align: right;
-    }
-
-    .typing {
-      display: none;
-      gap: 5px;
-      padding: 11px 14px;
-      background: #0b1424;
-      border: 1px solid rgba(0, 224, 200, 0.11);
-      border-radius: 3px 12px 12px 12px;
-      width: fit-content;
-    }
-
-    .typing.on {
-      display: flex;
-    }
-
-    .tdot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--teal);
-      animation: tbounce 1.2s infinite;
-    }
-
-    .tdot:nth-child(2) {
-      animation-delay: .2s
-    }
-
-    .tdot:nth-child(3) {
-      animation-delay: .4s
-    }
-
-    @keyframes tbounce {
-
-      0%,
-      60%,
-      100% {
-        transform: translateY(0);
-        opacity: 0.25
-      }
-
-      30% {
-        transform: translateY(-5px);
-        opacity: 1
-      }
-    }
+    .typing { display: none; gap: 5px; padding: 10px 13px; background: #0b1424; border: 1px solid rgba(0,224,200,.11); border-radius: 3px 12px 12px 12px; width: fit-content; }
+    .typing.on { display: flex; }
+    .tdot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: tbounce 1.2s infinite; }
+    .tdot:nth-child(2){animation-delay:.2s} .tdot:nth-child(3){animation-delay:.4s}
+    @keyframes tbounce { 0%,60%,100%{transform:translateY(0);opacity:.25} 30%{transform:translateY(-5px);opacity:1} }
 
     .iarea {
-      padding: 12px 18px;
+      padding: 10px 14px;
       border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      background: rgba(8, 8, 24, 0.95);
+      display: flex; gap: 7px; align-items: flex-end;
+      background: rgba(8,8,24,.97);
+      flex-shrink: 0;
     }
 
     .vbtn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: rgba(0, 224, 200, 0.05);
-      border: 1px solid rgba(0, 224, 200, 0.18);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      transition: all 0.2s;
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(0,224,200,.05);
+      border: 1px solid rgba(0,224,200,.18);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: all .2s;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .vbtn:hover {
-      background: rgba(0, 224, 200, 0.12);
-      border-color: var(--teal);
-      color: var(--teal);
-    }
-
+    .vbtn:hover { background: rgba(0,224,200,.12); border-color: var(--teal); color: var(--teal); }
     .vbtn.on {
-      background: rgba(0, 224, 200, 0.16);
-      border-color: var(--teal);
-      color: var(--teal);
+      background: rgba(0,224,200,.16); border-color: var(--teal); color: var(--teal);
       animation: vpulse 1s infinite;
     }
-
-    @keyframes vpulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 0 0 rgba(0, 224, 200, 0.28)
-      }
-
-      50% {
-        box-shadow: 0 0 0 8px rgba(0, 224, 200, 0)
-      }
-    }
+    @keyframes vpulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,224,200,.28)} 50%{box-shadow:0 0 0 8px rgba(0,224,200,0)} }
 
     .iwrap {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.28);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      display: flex;
-      align-items: flex-end;
-      padding: 7px 11px;
-      transition: border-color 0.2s;
+      flex: 1; background: rgba(0,0,0,.28);
+      border: 1px solid var(--border); border-radius: 10px;
+      display: flex; align-items: flex-end; padding: 7px 10px;
+      transition: border-color .2s;
     }
-
-    .iwrap:focus-within {
-      border-color: rgba(0, 224, 200, 0.32);
-    }
+    .iwrap:focus-within { border-color: rgba(0,224,200,.32); }
 
     .tinput {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: 'Exo 2', sans-serif;
-      font-size: 13.5px;
-      resize: none;
-      max-height: 100px;
-      line-height: 1.5;
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 13px;
+      resize: none; max-height: 90px; line-height: 1.5;
     }
-
-    .tinput::placeholder {
-      color: var(--muted);
-    }
+    .tinput::placeholder { color: var(--muted); }
 
     .sbtn {
-      padding: 9px 17px;
-      height: 42px;
-      flex-shrink: 0;
-      background: rgba(0, 224, 200, 0.08);
-      border: 1px solid rgba(0, 224, 200, 0.28);
-      border-radius: 9px;
-      color: var(--teal);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 10px;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.2s;
+      padding: 0 15px; height: 40px; flex-shrink: 0;
+      background: rgba(0,224,200,.08); border: 1px solid rgba(0,224,200,.28);
+      border-radius: 9px; color: var(--teal);
+      font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px;
+      cursor: pointer; transition: all .2s;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .sbtn:hover {
-      background: rgba(0, 224, 200, 0.18);
-    }
-
-    .sbtn:active {
-      transform: scale(0.97);
-    }
-
-    .sbtn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
+    .sbtn:hover  { background: rgba(0,224,200,.18); }
+    .sbtn:active { transform: scale(0.97); }
+    .sbtn:disabled { opacity: .3; cursor: not-allowed; }
 
     .toast {
-      position: fixed;
-      bottom: 65px;
-      left: 50%;
-      transform: translateX(-50%) translateY(14px);
-      background: rgba(0, 224, 200, 0.1);
-      border: 1px solid rgba(0, 224, 200, 0.32);
-      color: var(--teal);
-      padding: 6px 16px;
-      border-radius: 16px;
-      font-size: 10.5px;
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 1px;
-      opacity: 0;
-      transition: all 0.28s;
-      pointer-events: none;
-      z-index: 100;
+      position: fixed; bottom: 62px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: rgba(0,224,200,.1); border: 1px solid rgba(0,224,200,.32);
+      color: var(--teal); padding: 5px 14px; border-radius: 14px;
+      font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+      opacity: 0; transition: all .28s; pointer-events: none; z-index: 100;
     }
+    .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .toast.on {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    /* ═══════════════════════
+       RESPONSIVE — MOBILE
+    ═══════════════════════ */
+    @media (max-width: 680px) {
+      .cpanel       { display: none !important; }
+      .char-strip   { display: flex !important; }
+      .main         { flex-direction: column; }
+      .msg          { max-width: 96%; }
+      .mbub         { font-size: 12.5px; }
+      .hdr-logo     { font-size: 14px; letter-spacing: 4px; }
+      .hdr-sub      { display: none; }
+      .sbtn         { padding: 0 12px; font-size: 9px; }
+      .iarea        { padding: 8px 10px; gap: 6px; }
     }
   </style>
 </head>
-
 <body>
 
-  <header class="hdr">
-    <div>
-      <div class="hdr-logo">A · R · I · A</div>
-      <div class="hdr-sub">ASSISTENTE RESIDENCIAL INTELIGENTE</div>
+<header class="hdr">
+  <div>
+    <div class="hdr-logo">A · R · I · A</div>
+    <div class="hdr-sub">ASSISTENTE RESIDENCIAL INTELIGENTE</div>
+  </div>
+  <div class="hdr-dot"></div>
+</header>
+
+<!-- ═══════════ MOBILE CHARACTER STRIP ═══════════ -->
+<div class="char-strip" id="charStrip">
+  <svg class="strip-avatar" viewBox="40 5 160 215" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="sg_m" cx="48%" cy="36%" r="64%">
+        <stop offset="0%" stop-color="#fde8c8"/>
+        <stop offset="100%" stop-color="#f0b888"/>
+      </radialGradient>
+      <radialGradient id="ig_m" cx="30%" cy="25%" r="78%">
+        <stop offset="0%" stop-color="#00f5e0"/>
+        <stop offset="60%" stop-color="#00b8d4"/>
+        <stop offset="100%" stop-color="#006890"/>
+      </radialGradient>
+      <radialGradient id="hg_m" cx="40%" cy="20%" r="70%">
+        <stop offset="0%" stop-color="#1a0a38"/>
+        <stop offset="100%" stop-color="#08021a"/>
+      </radialGradient>
+    </defs>
+    <!-- Back hair -->
+    <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg_m)"/>
+    <!-- Upper shoulders (just a hint) -->
+    <path d="M 60 205 Q 40 210 36 218 L 204 218 Q 200 210 180 205 Q 164 198 120 196 Q 76 198 60 205 Z" fill="#0e1535"/>
+    <!-- V collar -->
+    <path d="M 94 204 L 120 218 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Neck -->
+    <rect x="104" y="185" width="32" height="22" rx="4" fill="url(#sg_m)"/>
+    <!-- Face -->
+    <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg_m)"/>
+    <!-- Ears -->
+    <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
+    <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
+    <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+    <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+    <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+    <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+    <!-- Bangs -->
+    <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
+    <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
+    <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
+    <!-- Eyebrows -->
+    <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+    <!-- Left Eye -->
+    <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
+    <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
+    <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
+    <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+    <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
+    <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <!-- Right Eye -->
+    <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
+    <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
+    <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
+    <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+    <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
+    <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <!-- Nose -->
+    <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+    <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+    <!-- Mouth closed -->
+    <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150 Q 120 161 105 150 Z" fill="#de8080"/>
+    <!-- Blush -->
+    <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
+    <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
+    <!-- Headset -->
+    <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
+    <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
+      <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
+  </svg>
+  <div class="strip-info">
+    <div class="strip-name">ARIA</div>
+    <div class="strip-status">MODELO v2.4 · ONLINE</div>
+    <div class="strip-badge" id="stripBadge"><div class="sdot"></div><span id="stripTxt">AGUARDANDO</span></div>
+    <div class="strip-devices" style="margin-top:5px">
+      <div class="strip-dev" id="sdluz">LUZ: OFF</div>
+      <div class="strip-dev" id="sdservo">SERVO: 0°</div>
     </div>
-    <div class="hdr-dot"></div>
-  </header>
+  </div>
+  <div style="flex-shrink:0">
+    <div class="api-cfg" style="width:110px">
+      <div class="api-lbl">VOZ</div>
+      <select id="voiceSelectM" style="font-size:9px; padding:4px 6px">
+        <option value="">Vozes...</option>
+      </select>
+    </div>
+  </div>
+</div>
 
-  <div class="main">
+<div class="main">
 
-    <!-- ═══════════════════════ CHARACTER PANEL ═══════════════════════ -->
-    <div class="cpanel">
-      <div class="cname">ARIA</div>
-      <div class="ctitle">MODELO v2.4 · ONLINE</div>
+  <!-- ═══════════ DESKTOP CHARACTER PANEL ═══════════ -->
+  <div class="cpanel">
+    <div class="cname">ARIA</div>
+    <div class="ctitle">MODELO v2.4 · ONLINE</div>
 
-      <div class="cwrap">
-        <div class="glow-ring" id="glowRing"></div>
+    <div class="cwrap">
+      <div class="glow-ring" id="glowRing"></div>
+      <!-- SVG — cabeça + ombros apenas -->
+      <svg class="char-svg" viewBox="40 5 160 215" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sg" cx="48%" cy="36%" r="64%">
+            <stop offset="0%" stop-color="#fde8c8"/>
+            <stop offset="100%" stop-color="#f0b888"/>
+          </radialGradient>
+          <radialGradient id="sg2" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#f5d5aa"/>
+            <stop offset="100%" stop-color="#e8a878"/>
+          </radialGradient>
+          <radialGradient id="ig" cx="30%" cy="25%" r="78%">
+            <stop offset="0%" stop-color="#00f5e0"/>
+            <stop offset="60%" stop-color="#00b8d4"/>
+            <stop offset="100%" stop-color="#006890"/>
+          </radialGradient>
+          <radialGradient id="hg" cx="40%" cy="20%" r="70%">
+            <stop offset="0%" stop-color="#1a0a38"/>
+            <stop offset="100%" stop-color="#08021a"/>
+          </radialGradient>
+        </defs>
 
-        <svg class="char-svg" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="sg" cx="48%" cy="36%" r="64%">
-              <stop offset="0%" stop-color="#fde8c8" />
-              <stop offset="100%" stop-color="#f0b888" />
-            </radialGradient>
-            <radialGradient id="sg2" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stop-color="#f5d5aa" />
-              <stop offset="100%" stop-color="#e8a878" />
-            </radialGradient>
-            <radialGradient id="ig" cx="30%" cy="25%" r="78%">
-              <stop offset="0%" stop-color="#00f5e0" />
-              <stop offset="60%" stop-color="#00b8d4" />
-              <stop offset="100%" stop-color="#006890" />
-            </radialGradient>
-            <radialGradient id="hg" cx="40%" cy="20%" r="70%">
-              <stop offset="0%" stop-color="#1a0a38" />
-              <stop offset="100%" stop-color="#08021a" />
-            </radialGradient>
-          </defs>
+        <!-- Back hair (trimmed at bottom) -->
+        <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg)"/>
+        <!-- Side strands -->
+        <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
+        <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
 
-          <!-- ── BACK HAIR ── -->
-          <path d="M 62 118
-               Q 52 88 56 58
-               Q 64 18 120 6
-               Q 176 18 184 58
-               Q 188 88 178 118
-               Q 172 148 168 185
-               Q 158 232 150 268
-               Q 145 290 120 294
-               Q 95 290 90 268
-               Q 82 232 72 185
-               Q 68 148 62 118 Z" fill="url(#hg)" />
-          <!-- Side strand left -->
-          <path d="M 62 118 Q 48 138 42 168 Q 36 198 44 222 Q 50 238 60 234 Q 68 218 70 196 Q 72 170 72 148 Z"
-            fill="#0d0520" />
-          <!-- Side strand right -->
-          <path
-            d="M 178 118 Q 192 138 198 168 Q 204 198 196 222 Q 190 238 180 234 Q 172 218 170 196 Q 168 170 168 148 Z"
-            fill="#0d0520" />
+        <!-- Shoulders (just a hint, no arms) -->
+        <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
+        <!-- V collar -->
+        <path d="M 94 204 L 120 220 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.5" stroke-linejoin="round"/>
+        <!-- Chest badge hint -->
+        <rect x="108" y="208" width="24" height="10" rx="2.5" fill="rgba(0,224,200,.07)" stroke="rgba(0,224,200,.3)" stroke-width=".7"/>
+        <line x1="112" y1="212" x2="128" y2="212" stroke="rgba(0,224,200,.5)" stroke-width=".8"/>
+        <line x1="112" y1="215" x2="125" y2="215" stroke="rgba(0,224,200,.25)" stroke-width=".8"/>
 
-          <!-- ── BODY / OUTFIT ── -->
-          <path d="M 50 228 Q 40 216 46 204 Q 64 196 120 196 Q 176 196 194 204 Q 200 216 190 228 L 186 370 L 54 370 Z"
-            fill="#0e1535" />
-          <!-- V collar -->
-          <path d="M 94 204 L 120 238 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.5"
-            stroke-linejoin="round" />
-          <!-- Tech lines on suit -->
-          <line x1="74" y1="216" x2="60" y2="310" stroke="rgba(0,224,200,0.16)" stroke-width="1" />
-          <line x1="166" y1="216" x2="180" y2="310" stroke="rgba(0,224,200,0.16)" stroke-width="1" />
-          <!-- Chest badge -->
-          <rect x="107" y="254" width="26" height="17" rx="3" fill="rgba(0,224,200,0.07)" stroke="rgba(0,224,200,0.32)"
-            stroke-width="0.8" />
-          <line x1="111" y1="260" x2="129" y2="260" stroke="rgba(0,224,200,0.5)" stroke-width="0.8" />
-          <line x1="111" y1="264" x2="125" y2="264" stroke="rgba(0,224,200,0.3)" stroke-width="0.8" />
-          <line x1="111" y1="268" x2="121" y2="268" stroke="rgba(0,224,200,0.2)" stroke-width="0.8" />
-          <!-- Arm left -->
-          <path d="M 46 210 Q 24 222 18 268 Q 15 296 28 314 Q 40 324 46 304 Q 41 286 46 258 Q 54 236 64 226 Z"
-            fill="#0e1535" />
-          <!-- Arm right -->
-          <path
-            d="M 194 210 Q 216 222 222 268 Q 225 296 212 314 Q 200 324 194 304 Q 199 286 194 258 Q 186 236 176 226 Z"
-            fill="#0e1535" />
-          <!-- Hands -->
-          <ellipse cx="29" cy="320" rx="13" ry="16" fill="url(#sg2)" />
-          <ellipse cx="211" cy="320" rx="13" ry="16" fill="url(#sg2)" />
-          <!-- Arm detail lines -->
-          <path d="M 46 218 Q 32 234 26 258" fill="none" stroke="rgba(0,224,200,0.12)" stroke-width="1" />
-          <path d="M 194 218 Q 208 234 214 258" fill="none" stroke="rgba(0,224,200,0.12)" stroke-width="1" />
+        <!-- Neck -->
+        <rect x="104" y="185" width="32" height="24" rx="4" fill="url(#sg)"/>
+        <rect x="104" y="198" width="32" height="11" rx="0" fill="rgba(0,0,0,.08)"/>
 
-          <!-- ── NECK ── -->
-          <rect x="104" y="185" width="32" height="24" rx="4" fill="url(#sg)" />
-          <rect x="104" y="198" width="32" height="11" rx="0" fill="rgba(0,0,0,0.08)" />
+        <!-- Face -->
+        <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg)"/>
 
-          <!-- ── FACE ── -->
-          <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg)" />
+        <!-- Ears -->
+        <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+        <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+        <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+        <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+        <!-- Earrings -->
+        <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+        <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+        <circle cx="54" cy="128" r="1.6" fill="white" opacity=".55"/>
+        <circle cx="186" cy="128" r="1.6" fill="white" opacity=".55"/>
 
-          <!-- Ears -->
-          <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)" />
-          <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)" />
-          <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,0.14)" />
-          <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,0.14)" />
-          <!-- Earrings -->
-          <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity="0.88" />
-          <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity="0.88" />
-          <circle cx="54" cy="128" r="1.6" fill="white" opacity="0.55" />
-          <circle cx="186" cy="128" r="1.6" fill="white" opacity="0.55" />
+        <!-- Bangs / Front hair -->
+        <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
+        <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
+        <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
+        <!-- Hair highlights -->
+        <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+        <path d="M 68 52 Q 66 70 67 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
+        <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+        <path d="M 172 52 Q 174 70 173 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
 
-          <!-- ── BANGS / FRONT HAIR ── -->
-          <!-- Left bang -->
-          <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520" />
-          <!-- Center bang -->
-          <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z"
-            fill="#0d0520" />
-          <!-- Right bang -->
-          <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z"
-            fill="#0d0520" />
-          <!-- Hair highlight streaks -->
-          <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round"
-            opacity="0.5" />
-          <path d="M 68 52 Q 66 70 67 90" fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round"
-            opacity="0.4" />
-          <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round"
-            opacity="0.5" />
-          <path d="M 172 52 Q 174 70 173 90" fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round"
-            opacity="0.4" />
+        <!-- Eyebrows -->
+        <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
 
-          <!-- ── EYEBROWS ── -->
-          <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round" />
-          <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round" />
+        <!-- LEFT EYE -->
+        <g id="eyeL">
+          <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
+          <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
+          <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+          <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+          <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
+          <circle cx="90" cy="110" r="1.6" fill="white" opacity=".42"/>
+          <ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+          <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+          <line x1="80" y1="97" x2="77" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="87" y1="92" x2="86" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="95" y1="91" x2="95" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="103" y1="92" x2="104" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="110" y1="97" x2="112" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M 78 109 Q 95 117 112 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
 
-          <!-- ── LEFT EYE ── -->
-          <g id="eyeL">
-            <!-- Sclera -->
-            <ellipse cx="95" cy="104" rx="19" ry="16" fill="white" />
-            <!-- Upper lid cover -->
-            <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8" />
-            <!-- Iris -->
-            <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)" />
-            <!-- Pupil -->
-            <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e" />
-            <!-- Catch lights -->
-            <circle cx="100" cy="100" r="3.2" fill="white" opacity="0.92" />
-            <circle cx="90" cy="110" r="1.6" fill="white" opacity="0.42" />
-            <!-- Eyelid (blinking cover — shown via JS) -->
-            <ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0" />
-            <!-- Upper lash line (on top of eyelid) -->
-            <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round" />
-            <!-- Lash spikes -->
-            <line x1="80" y1="97" x2="77" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="87" y1="92" x2="86" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="95" y1="91" x2="95" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="103" y1="92" x2="104" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="110" y1="97" x2="112" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <!-- Lower lash -->
-            <path d="M 78 109 Q 95 117 112 109" fill="none" stroke="#16082c" stroke-width="1.1"
-              stroke-linecap="round" />
-          </g>
+        <!-- RIGHT EYE -->
+        <g id="eyeR">
+          <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
+          <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
+          <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+          <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+          <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
+          <circle cx="140" cy="110" r="1.6" fill="white" opacity=".42"/>
+          <ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+          <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+          <line x1="130" y1="97" x2="127" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="137" y1="92" x2="136" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="145" y1="91" x2="145" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="153" y1="92" x2="154" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="160" y1="97" x2="162" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M 128 109 Q 145 117 162 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
 
-          <!-- ── RIGHT EYE ── -->
-          <g id="eyeR">
-            <ellipse cx="145" cy="104" rx="19" ry="16" fill="white" />
-            <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8" />
-            <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)" />
-            <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e" />
-            <circle cx="150" cy="100" r="3.2" fill="white" opacity="0.92" />
-            <circle cx="140" cy="110" r="1.6" fill="white" opacity="0.42" />
-            <ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0" />
-            <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3"
-              stroke-linecap="round" />
-            <line x1="130" y1="97" x2="127" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="137" y1="92" x2="136" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="145" y1="91" x2="145" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="153" y1="92" x2="154" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <line x1="160" y1="97" x2="162" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round" />
-            <path d="M 128 109 Q 145 117 162 109" fill="none" stroke="#16082c" stroke-width="1.1"
-              stroke-linecap="round" />
-          </g>
+        <!-- Nose -->
+        <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+        <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+        <path d="M 115 134 Q 120 138 125 134" fill="none" stroke="rgba(160,88,58,.15)" stroke-width="1"/>
 
-          <!-- ── NOSE ── -->
-          <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,0.2)" />
-          <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,0.2)" />
-          <path d="M 115 134 Q 120 138 125 134" fill="none" stroke="rgba(160,88,58,0.15)" stroke-width="1" />
+        <!-- MOUTH CLOSED -->
+        <g id="mc">
+          <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
+          <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
+          <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
+        </g>
+        <!-- MOUTH OPEN -->
+        <g id="mo" style="opacity:0">
+          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
+          <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
+          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
+          <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
+        </g>
 
-          <!-- ── MOUTH CLOSED (default) ── -->
-          <g id="mc">
-            <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none" />
-            <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none" />
-            <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width="0.7" />
-          </g>
+        <!-- Blush -->
+        <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
+        <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
 
-          <!-- ── MOUTH OPEN (speaking) ── -->
-          <g id="mo" style="opacity:0">
-            <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z"
-              fill="#9a2828" />
-            <!-- Teeth row -->
-            <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white" />
-            <!-- Upper lip over teeth -->
-            <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060" stroke="none" />
-            <!-- Tongue hint -->
-            <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity="0.5" />
-          </g>
+        <!-- Headset -->
+        <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
+        <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
+          <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
+      </svg>
+    </div><!-- cwrap -->
 
-          <!-- Blush -->
-          <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,0.1)" />
-          <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,0.1)" />
+    <div class="sbadge" id="sbadge">
+      <div class="sdot"></div>
+      <span id="stxt">AGUARDANDO</span>
+    </div>
 
-          <!-- ── HEADSET (left ear) ── -->
-          <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width="0.75"
-            opacity="0.85" />
-          <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity="0.4">
-            <animate attributeName="opacity" values="0.15;0.75;0.15" dur="2.4s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity="0.9" />
-        </svg>
-      </div><!-- end cwrap -->
-
-      <div class="sbadge" id="sbadge">
-        <div class="sdot"></div>
-        <span id="stxt">AGUARDANDO</span>
+    <div class="devices">
+      <div class="drow">
+        <span class="dname">Luz</span>
+        <span class="dval off" id="dluz">DESLIGADA</span>
       </div>
-
-      <div class="devices">
-        <div class="drow">
-          <span class="dname">Luz</span>
-          <span class="dval off" id="dluz">DESLIGADA</span>
-        </div>
-        <div class="drow">
-          <span class="dname">Servo</span>
-          <span class="dval off" id="dservo">0°</span>
-        </div>
-        <div class="drow">
-          <span class="dname">MQTT</span>
-          <span class="dval" id="dmqtt">ATIVO</span>
-        </div>
+      <div class="drow">
+        <span class="dname">Servo</span>
+        <span class="dval off" id="dservo">0°</span>
       </div>
-
-      <div class="api-cfg">
-        <div class="api-lbl">ENDPOINT DA API</div>
-        <input type="text" id="apiUrl" value="http://localhost:5000/api/comando" spellcheck="false" />
-      </div>
-      <div class="api-cfg">
-        <div class="api-lbl">SELECIONE A VOZ</div>
-        <select id="voiceSelect">
-          <option value="">Carregando vozes...</option>
-        </select>
-      </div>
-    </div><!-- end cpanel -->
-
-    <!-- ═══════════════════════ CHAT PANEL ═══════════════════════ -->
-    <div class="chat">
-      <div class="msgs" id="msgs">
-        <div class="msg assistant">
-          <div class="mav">AI</div>
-          <div>
-            <div class="mbub">Olá! Sou a <strong>ARIA</strong>, sua assistente residencial inteligente. Posso controlar
-              os dispositivos da sua casa. Tente: <em>"acenda a luz"</em>, <em>"apague a luz"</em> ou <em>"gire o servo
-                para 90 graus"</em>.</div>
-            <div class="mtime">agora</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="padding:0 20px 6px">
-        <div class="typing" id="typing">
-          <div class="tdot"></div>
-          <div class="tdot"></div>
-          <div class="tdot"></div>
-        </div>
-      </div>
-
-      <div class="iarea">
-        <button class="vbtn" id="vbtn" title="Falar por voz">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-            <line x1="12" y1="19" x2="12" y2="23" />
-            <line x1="8" y1="23" x2="16" y2="23" />
-          </svg>
-        </button>
-        <div class="iwrap">
-          <textarea class="tinput" id="tinput" placeholder="Digite um comando... (ex: acenda a luz)"
-            rows="1"></textarea>
-        </div>
-        <button class="sbtn" id="sbtn">ENVIAR</button>
+      <div class="drow">
+        <span class="dname">MQTT</span>
+        <span class="dval" id="dmqtt">ATIVO</span>
       </div>
     </div>
 
-  </div><!-- end main -->
-  <div class="toast" id="toast"></div>
+    <div class="api-cfg">
+      <div class="api-lbl">ENDPOINT DA API</div>
+      <input type="text" id="apiUrl" value="http://localhost:5000/api/comando" spellcheck="false"/>
+    </div>
+    <div class="api-cfg">
+      <div class="api-lbl">SELECIONE A VOZ</div>
+      <select id="voiceSelect">
+        <option value="">Carregando vozes...</option>
+      </select>
+    </div>
+  </div><!-- cpanel -->
 
-  <script>
-    /* ════════════════════════════════════════
-       CONFIGURAÇÕES GLOBAIS
-    ════════════════════════════════════════ */
-    const getUrl = () => document.getElementById('apiUrl').value.trim();
-
-    let isListening = false;
-    let isSpeaking = false;
-    let recog = null;
-    let currentVoice = null;
-    let speakTimer = null;
-    let blinkTimer = null;
-
-    /* ════════════════════════════════════════
-       ESTADOS E ANIMAÇÃO DA PERSONAGEM
-    ════════════════════════════════════════ */
-    function setState(s) {
-      const badge = document.getElementById('sbadge');
-      const stxt = document.getElementById('stxt');
-      const ring = document.getElementById('glowRing');
-
-      badge.className = 'sbadge';
-      ring.classList.remove('on');
-
-      const map = {
-        idle: ['AGUARDANDO', ''],
-        listening: ['OUVINDO...', 'listening'],
-        thinking: ['PROCESSANDO', ''],
-        speaking: ['RESPONDENDO', 'speaking']
-      };
-      const [txt, cls] = map[s] || map.idle;
-      stxt.textContent = txt;
-      if (cls) badge.classList.add(cls);
-      if (s === 'listening') ring.classList.add('on');
-      if (s === 'speaking') startSpeak(); else stopSpeak();
-    }
-
-    function startSpeak() {
-      let o = false;
-      speakTimer = setInterval(() => {
-        o = !o;
-        const mo = document.getElementById('mo');
-        const mc = document.getElementById('mc');
-        if (mo) mo.style.opacity = o ? '1' : '0';
-        if (mc) mc.style.opacity = o ? '0' : '1';
-      }, 120 + Math.random() * 80);
-    }
-
-    function stopSpeak() {
-      if (speakTimer) { clearInterval(speakTimer); speakTimer = null; }
-      const mo = document.getElementById('mo');
-      const mc = document.getElementById('mc');
-      if (mo) mo.style.opacity = '0';
-      if (mc) mc.style.opacity = '1';
-    }
-
-    function blink() {
-      document.getElementById('lidL').setAttribute('opacity', '1');
-      document.getElementById('lidR').setAttribute('opacity', '1');
-      setTimeout(() => {
-        document.getElementById('lidL').setAttribute('opacity', '0');
-        document.getElementById('lidR').setAttribute('opacity', '0');
-      }, 135);
-    }
-
-    function scheduleBlink() {
-      blinkTimer = setTimeout(() => { blink(); scheduleBlink(); }, 2600 + Math.random() * 4000);
-    }
-    scheduleBlink();
-
-    /* ════════════════════════════════════════
-       CHAT E DISPOSITIVOS
-    ════════════════════════════════════════ */
-    const msgsEl = document.getElementById('msgs');
-
-    function addMsg(text, role) {
-      const d = document.createElement('div');
-      d.className = 'msg ' + role;
-      const t = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      d.innerHTML = `
-        <div class="mav">${role === 'user' ? 'EU' : 'AI'}</div>
+  <!-- ═══════════ CHAT ═══════════ -->
+  <div class="chat">
+    <div class="msgs" id="msgs">
+      <div class="msg assistant">
+        <div class="mav">AI</div>
         <div>
-          <div class="mbub">${text}</div>
-          <div class="mtime">${t}</div>
-        </div>`;
-      msgsEl.appendChild(d);
-      msgsEl.scrollTop = msgsEl.scrollHeight;
+          <div class="mbub">Olá! Sou a <strong>ARIA</strong>, sua assistente residencial inteligente. Posso controlar os dispositivos da sua casa. Tente: <em>"acenda a luz"</em>, <em>"apague a luz"</em> ou <em>"gire o servo para 90 graus"</em>.</div>
+          <div class="mtime">agora</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:0 16px 6px">
+      <div class="typing" id="typing">
+        <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+      </div>
+    </div>
+
+    <div class="iarea">
+      <button class="vbtn" id="vbtn" title="Falar por voz">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <div class="iwrap">
+        <textarea class="tinput" id="tinput" placeholder="Digite um comando... (ex: acenda a luz)" rows="1"></textarea>
+      </div>
+      <button class="sbtn" id="sbtn">ENVIAR</button>
+    </div>
+  </div>
+
+</div><!-- main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONFIGURAÇÕES GLOBAIS
+═══════════════════════════════════════════ */
+const getUrl = () => document.getElementById('apiUrl').value.trim();
+
+// wantListening = intenção do usuário (controlado APENAS pelo clique)
+// isSpeaking    = se a IA está falando no momento
+let wantListening = false;
+let isSpeaking    = false;
+let recog         = null;
+let currentVoice  = null;
+let speakTimer    = null;
+let blinkTimer    = null;
+
+/* ═══════════════════════════════════════════
+   ESTADOS DA PERSONAGEM
+═══════════════════════════════════════════ */
+function setState(s) {
+  // Desktop
+  const badge = document.getElementById('sbadge');
+  const stxt  = document.getElementById('stxt');
+  const ring  = document.getElementById('glowRing');
+  // Mobile
+  const sbM   = document.getElementById('stripBadge');
+  const stM   = document.getElementById('stripTxt');
+
+  badge.className = 'sbadge';
+  if (sbM) sbM.className = 'strip-badge';
+  ring.classList.remove('on');
+
+  const map = {
+    idle:      ['AGUARDANDO', ''],
+    listening: ['OUVINDO...',  'listening'],
+    thinking:  ['PROCESSANDO',''],
+    speaking:  ['RESPONDENDO','speaking']
+  };
+  const [txt, cls] = map[s] || map.idle;
+  stxt.textContent = txt;
+  if (stM) stM.textContent = txt;
+  if (cls) { badge.classList.add(cls); if (sbM) sbM.classList.add(cls); }
+  if (s === 'listening') ring.classList.add('on');
+  if (s === 'speaking') startSpeak(); else stopSpeak();
+}
+
+function startSpeak() {
+  let o = false;
+  speakTimer = setInterval(() => {
+    o = !o;
+    const mo = document.getElementById('mo');
+    const mc = document.getElementById('mc');
+    if (mo) mo.style.opacity = o ? '1' : '0';
+    if (mc) mc.style.opacity = o ? '0' : '1';
+  }, 110 + Math.random() * 80);
+}
+function stopSpeak() {
+  if (speakTimer) { clearInterval(speakTimer); speakTimer = null; }
+  const mo = document.getElementById('mo');
+  const mc = document.getElementById('mc');
+  if (mo) mo.style.opacity = '0';
+  if (mc) mc.style.opacity = '1';
+}
+
+function blink() {
+  document.getElementById('lidL')?.setAttribute('opacity','1');
+  document.getElementById('lidR')?.setAttribute('opacity','1');
+  setTimeout(() => {
+    document.getElementById('lidL')?.setAttribute('opacity','0');
+    document.getElementById('lidR')?.setAttribute('opacity','0');
+  }, 135);
+}
+function scheduleBlink() {
+  blinkTimer = setTimeout(() => { blink(); scheduleBlink(); }, 2600 + Math.random() * 4000);
+}
+scheduleBlink();
+
+/* ═══════════════════════════════════════════
+   CHAT E DISPOSITIVOS
+═══════════════════════════════════════════ */
+const msgsEl = document.getElementById('msgs');
+
+function addMsg(text, role) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  const t = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+  d.innerHTML = `
+    <div class="mav">${role==='user'?'EU':'AI'}</div>
+    <div>
+      <div class="mbub">${text}</div>
+      <div class="mtime">${t}</div>
+    </div>`;
+  msgsEl.appendChild(d);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function setTyping(v) {
+  document.getElementById('typing').className = 'typing' + (v ? ' on' : '');
+}
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 3000);
+}
+function updateDevs(cmd, param) {
+  if (cmd === 'led_on') {
+    document.getElementById('dluz').textContent  = 'LIGADA'; document.getElementById('dluz').className  = 'dval';
+    document.getElementById('sdluz').textContent = 'LUZ: ON'; document.getElementById('sdluz').className = 'strip-dev on';
+  } else if (cmd === 'led_off') {
+    document.getElementById('dluz').textContent  = 'DESLIGADA'; document.getElementById('dluz').className  = 'dval off';
+    document.getElementById('sdluz').textContent = 'LUZ: OFF'; document.getElementById('sdluz').className = 'strip-dev';
+  } else if (cmd === 'servo_angle' && param) {
+    document.getElementById('dservo').textContent  = param + '°'; document.getElementById('dservo').className  = 'dval';
+    document.getElementById('sdservo').textContent = 'SERVO: ' + param + '°'; document.getElementById('sdservo').className = 'strip-dev on';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   TTS
+═══════════════════════════════════════════ */
+function populateVoiceList() {
+  ['voiceSelect','voiceSelectM'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const all = window.speechSynthesis.getVoices();
+    const pt  = all.filter(v => v.lang.startsWith('pt'));
+    if (!pt.length) { sel.innerHTML = '<option value="">Sem voz PT</option>'; return; }
+    sel.innerHTML = pt.map((v,i) => `<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+    // Tenta voz preferida
+    const pref = ['Microsoft Francisca Desktop - Portuguese (Brazil)'];
+    for (const p of pref) {
+      const idx = pt.findIndex(v => v.name === p);
+      if (idx !== -1) { sel.selectedIndex = idx; break; }
     }
+    sel.dispatchEvent(new Event('change'));
+  });
+}
 
-    function setTyping(v) {
-      document.getElementById('typing').className = 'typing' + (v ? ' on' : '');
-    }
+['voiceSelect','voiceSelectM'].forEach(id => {
+  document.getElementById(id)?.addEventListener('change', e => {
+    const idx = e.target.value;
+    if (idx === '') return;
+    const pt = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'));
+    currentVoice = pt[parseInt(idx)];
+    // Sincroniza os dois seletores
+    ['voiceSelect','voiceSelectM'].forEach(sid => {
+      const s = document.getElementById(sid);
+      if (s && s.id !== id) s.selectedIndex = e.target.selectedIndex;
+    });
+    if (currentVoice) speak('Voz selecionada. Teste de funcionamento.');
+  });
+});
 
-    function showToast(msg) {
-      const el = document.getElementById('toast');
-      el.textContent = msg;
-      el.classList.add('on');
-      setTimeout(() => el.classList.remove('on'), 3000);
-    }
+window.speechSynthesis.onvoiceschanged = populateVoiceList;
+window.addEventListener('load', () => setTimeout(populateVoiceList, 200));
 
-    function updateDevs(cmd, param) {
-      if (cmd === 'led_on') {
-        const e = document.getElementById('dluz');
-        e.textContent = 'LIGADA'; e.className = 'dval';
-      } else if (cmd === 'led_off') {
-        const e = document.getElementById('dluz');
-        e.textContent = 'DESLIGADA'; e.className = 'dval off';
-      } else if (cmd === 'servo_angle' && param) {
-        const e = document.getElementById('dservo');
-        e.textContent = param + '°'; e.className = 'dval';
-      }
-    }
+function speak(text) {
+  if (!window.speechSynthesis) { setTimeout(() => setState('idle'), 2200); return; }
 
-    /* ════════════════════════════════════════
-       TEXTO-TO-SPEECH COM SELETOR
-    ════════════════════════════════════════ */
-    function populateVoiceList() {
-      const voiceSelect = document.getElementById('voiceSelect');
-      if (!voiceSelect) return;
+  // Pausa o microfone enquanto fala (sem alterar wantListening)
+  if (recog && wantListening) {
+    try { recog.stop(); } catch(e){}
+  }
+  isSpeaking = true;
 
-      const availableVoices = window.speechSynthesis.getVoices();
-      const portugueseVoices = availableVoices.filter(voice => voice.lang.startsWith('pt'));
+  const clean = text.replace(/<[^>]+>/g,'').replace(/[💡⚙️✅❌⚠️]/g,'');
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang  = 'pt-BR';
+  utt.rate  = 1.0;
+  utt.pitch = 1.12;
+  if (currentVoice) utt.voice = currentVoice;
 
-      if (portugueseVoices.length === 0) {
-        voiceSelect.innerHTML = '<option value="">Nenhuma voz em português encontrada</option>';
-        return;
-      }
-
-      voiceSelect.innerHTML = portugueseVoices.map((voice, index) =>
-        `<option value="${index}" data-voice-name="${voice.name}">${voice.name} (${voice.lang})</option>`
-      ).join('');
-
-      // Tenta selecionar automaticamente uma voz boa
-      const preferred = ['Microsoft Francisca Desktop - Portuguese (Brazil)'];
-      for (const pref of preferred) {
-        const idx = portugueseVoices.findIndex(v => v.name === pref);
-        if (idx !== -1) {
-          voiceSelect.selectedIndex = idx;
-          break;
+  function afterSpeak() {
+    isSpeaking = false;
+    setState('idle');
+    // Se o usuário ainda quer escutar, retoma o microfone após 800ms
+    if (wantListening && recog) {
+      setTimeout(() => {
+        if (wantListening && !isSpeaking) {
+          try { recog.start(); setState('listening'); } catch(e){}
         }
-      }
-      voiceSelect.dispatchEvent(new Event('change'));
+      }, 800);
     }
+  }
+  utt.onend   = afterSpeak;
+  utt.onerror = afterSpeak;
+  window.speechSynthesis.speak(utt);
+}
 
-    function speak(text) {
-      if (!window.speechSynthesis) {
-        setTimeout(() => setState('idle'), 2200);
-        return;
-      }
+/* ═══════════════════════════════════════════
+   RECONHECIMENTO DE VOZ
+═══════════════════════════════════════════ */
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recog = new SR();
+  recog.lang = 'pt-BR';
+  recog.continuous    = true;
+  recog.interimResults = false;
 
-      // 🔇 Desliga o microfone enquanto fala
-      if (isListening) {
-        if (recog) recog.stop();
-        isListening = false;
-        document.getElementById('vbtn').classList.remove('on');
-      }
-      isSpeaking = true;
+  recog.onresult = e => {
+    const t = e.results[e.results.length - 1][0].transcript;
+    document.getElementById('tinput').value = t;
+    send(t);
+  };
 
-      const clean = text.replace(/<[^>]+>/g, '').replace(/[💡⚙️✅❌⚠️]/g, '');
-      const utterance = new SpeechSynthesisUtterance(clean);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 1.0;
-      utterance.pitch = 1.12;
-
-      if (currentVoice) utterance.voice = currentVoice;
-
-      utterance.onend = () => {
-        setState('idle');
-        isSpeaking = false;
-        // ✅ Reativa o microfone após 1 segundo (evita capturar o final da fala)
-        setTimeout(() => {
-          if (!isListening && !isSpeaking && document.getElementById('vbtn').classList.contains('on')) {
-            isListening = true;
-            try { recog?.start(); } catch (e) { }
-          }
-        }, 1000);
-      };
-      utterance.onerror = () => {
-        setState('idle');
-        isSpeaking = false;
-        setTimeout(() => {
-          if (!isListening && document.getElementById('vbtn').classList.contains('on')) {
-            isListening = true;
-            try { recog?.start(); } catch (e) { }
-          }
-        }, 1000);
-      };
-      window.speechSynthesis.speak(utterance);
+  // Reinicia automaticamente só se o usuário ainda quer escutar e não está falando
+  recog.onend = () => {
+    if (wantListening && !isSpeaking) {
+      try { recog.start(); } catch(e){}
     }
-
-    // Evento do seletor de voz
-    document.getElementById('voiceSelect')?.addEventListener('change', (event) => {
-      const idx = event.target.value;
-      if (idx === "") return;
-      const availableVoices = window.speechSynthesis.getVoices();
-      const portugueseVoices = availableVoices.filter(voice => voice.lang.startsWith('pt'));
-      currentVoice = portugueseVoices[parseInt(idx)];
-      if (currentVoice) {
-        speak("Voz selecionada. Teste de funcionamento.");
-      }
-    });
-
-    window.speechSynthesis.onvoiceschanged = populateVoiceList;
-    window.addEventListener('load', () => setTimeout(populateVoiceList, 200));
-
-    /* ════════════════════════════════════════
-       ENVIO DE COMANDOS (API)
-    ════════════════════════════════════════ */
-    async function send(text) {
-      if (!text.trim()) return;
-      addMsg(text, 'user');
-      document.getElementById('tinput').value = '';
-      document.getElementById('tinput').style.height = 'auto';
-      setTyping(true);
-      setState('thinking');
-      document.getElementById('sbtn').disabled = true;
-
-      try {
-        const r = await fetch(getUrl(), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mensagem: text })
-        });
-        const data = await r.json();
-        setTyping(false);
-        const resp = data.resposta || data.response || data.message || JSON.stringify(data);
-        if (data.comando) updateDevs(data.comando, data.parametro);
-        setState('speaking');
-        addMsg(resp, 'assistant');
-        speak(resp);
-        showToast('✓ Processado');
-      } catch (e) {
-        setTyping(false);
-        const fallback = "Desculpe, não entendi o comando. Tente: 'acenda a luz' ou 'gire o servo para 90 graus'.";
-        setState('speaking');
-        addMsg(fallback, 'assistant');
-        speak(fallback);
-        showToast('⚠ Modo offline');
-      } finally {
-        document.getElementById('sbtn').disabled = false;
-      }
+  };
+  recog.onerror = (err) => {
+    // 'no-speech' é normal — só reinicia
+    if (wantListening && !isSpeaking) {
+      setTimeout(() => { try { recog.start(); } catch(e){} }, 500);
     }
+  };
+}
 
-    /* ════════════════════════════════════════
-       RECONHECIMENTO DE VOZ
-    ════════════════════════════════════════ */
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recog = new SR();
-      recog.lang = 'pt-BR';
-      recog.continuous = true;          // mantém microfone ativo
-      recog.interimResults = false;
+document.getElementById('vbtn').addEventListener('click', () => {
+  if (!recog) { showToast('Reconhecimento de voz não suportado'); return; }
 
-      recog.onresult = e => {
-        const t = e.results[0][0].transcript;
-        document.getElementById('tinput').value = t;
-        send(t);
-      };
-
-      recog.onend = () => {
-        if (isSpeaking) return; // não reinicia enquanto fala
-        if (isListening) {
-          try { recog.start(); } catch (e) { }
-        } else {
-          document.getElementById('vbtn').classList.remove('on');
-          if (document.getElementById('stxt').textContent === 'OUVINDO...') setState('idle');
-        }
-      };
-
-      recog.onerror = () => {
-        if (isSpeaking) return;
-        if (isListening) {
-          setTimeout(() => { try { recog.start(); } catch (e) { } }, 1000);
-        }
-      };
+  if (wantListening) {
+    // ─── DESLIGAR ───
+    wantListening = false;
+    try { recog.stop(); } catch(e){}
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    isSpeaking = false;
+    document.getElementById('vbtn').classList.remove('on');
+    setState('idle');
+  } else {
+    // ─── LIGAR ───
+    wantListening = true;
+    document.getElementById('vbtn').classList.add('on');
+    setState('listening');
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
     }
+    try { recog.start(); } catch(e){}
+  }
+});
 
-    document.getElementById('vbtn').addEventListener('click', () => {
-      if (!recog) { showToast('Reconhecimento de voz não suportado'); return; }
-      if (isListening) {
-        recog.stop();
-        isListening = false;
-        document.getElementById('vbtn').classList.remove('on');
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-      } else {
-        if (isSpeaking) {
-          window.speechSynthesis.cancel();
-          isSpeaking = false;
-        }
-        isListening = true;
-        document.getElementById('vbtn').classList.add('on');
-        setState('listening');
-        try { recog.start(); } catch (e) { }
-      }
-    });
+/* ═══════════════════════════════════════════
+   ENVIO DE COMANDOS (API)
+═══════════════════════════════════════════ */
+async function send(text) {
+  if (!text.trim()) return;
+  addMsg(text, 'user');
+  document.getElementById('tinput').value = '';
+  document.getElementById('tinput').style.height = 'auto';
+  setTyping(true);
+  setState('thinking');
+  document.getElementById('sbtn').disabled = true;
 
-    /* ════════════════════════════════════════
-       EVENTOS DE TEXTO
-    ════════════════════════════════════════ */
-    document.getElementById('sbtn').addEventListener('click', () => {
-      const v = document.getElementById('tinput').value.trim();
-      if (v) send(v);
+  try {
+    const r = await fetch(getUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mensagem: text })
     });
+    const data = await r.json();
+    setTyping(false);
+    const resp = data.resposta || data.response || data.message || JSON.stringify(data);
+    if (data.comando) updateDevs(data.comando, data.parametro);
+    setState('speaking');
+    addMsg(resp, 'assistant');
+    speak(resp);
+    showToast('✓ Processado');
+  } catch(e) {
+    setTyping(false);
+    const fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique o endpoint da API.';
+    setState('speaking');
+    addMsg(fallback, 'assistant');
+    speak(fallback);
+    showToast('⚠ Modo offline');
+  } finally {
+    document.getElementById('sbtn').disabled = false;
+  }
+}
 
-    document.getElementById('tinput').addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        const v = e.target.value.trim();
-        if (v) send(v);
-      }
-    });
-
-    document.getElementById('tinput').addEventListener('input', e => {
-      e.target.style.height = 'auto';
-      e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
-    });
-  </script>
+/* ═══════════════════════════════════════════
+   EVENTOS DE TEXTO
+═══════════════════════════════════════════ */
+document.getElementById('sbtn').addEventListener('click', () => {
+  const v = document.getElementById('tinput').value.trim();
+  if (v) send(v);
+});
+document.getElementById('tinput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    const v = e.target.value.trim();
+    if (v) send(v);
+  }
+});
+document.getElementById('tinput').addEventListener('input', e => {
+  e.target.style.height = 'auto';
+  e.target.style.height = Math.min(e.target.scrollHeight, 90) + 'px';
+});
+</script>
 </body>
-
 </html>

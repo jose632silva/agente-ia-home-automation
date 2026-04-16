@@ -21,11 +21,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "").lower()
 
 # Configurações MQTT (AJUSTADAS PARA O BROKER REAL)
-MQTT_BROKER = os.getenv("MQTT_BROKER", "analyticsiotconects.com.br")  # <-- broker real
+MQTT_BROKER = os.getenv("MQTT_BROKER", "broker.emqx.io")  # <-- broker real
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
 MQTT_TOPIC = os.getenv("MQTT_TOPIC", "jrsilva/comando")              # <-- tópico real
-MQTT_USER = os.getenv("MQTT_USER", "usuarioroot")                    # <-- usuário
-MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "senharoot")              # <-- senha
+#MQTT_USER = os.getenv("MQTT_USER", "usuarioroot")                    # <-- usuário
+#MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "senharoot")              # <-- senha
 
 # Modelos específicos (valores padrão)
 #GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
@@ -78,7 +78,7 @@ def controlar_esp32(comando: str, parametro: str = "") -> str:
             payload=json.dumps(mensagem),
             hostname=MQTT_BROKER,
             port=MQTT_PORT,
-            auth={'username': MQTT_USER, 'password': MQTT_PASSWORD}  # <-- credenciais
+            #auth={'username': MQTT_USER, 'password': MQTT_PASSWORD}  # <-- credenciais
         )
         return f"✅ Comando '{comando}' enviado com sucesso para o ESP32."
     except Exception as e:

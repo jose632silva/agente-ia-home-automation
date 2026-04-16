@@ -28,7 +28,7 @@ MQTT_USER = os.getenv("MQTT_USER", "usuarioroot")                    # <-- usuá
 MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "senharoot")              # <-- senha
 
 # Modelos específicos (valores padrão)
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+#GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 # =====================================================

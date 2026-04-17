@@ -88,7 +88,7 @@
     .cwrap {
       position: relative;
       width: 210px;
-      height: 320px; /* taller to show torso */
+      height: 320px;
     }
 
     .char-svg {
@@ -359,7 +359,6 @@
 
 <!-- ═══════════ MOBILE CHARACTER STRIP ═══════════ -->
 <div class="char-strip" id="charStrip">
-  <!-- Mobile SVG: viewBox extended to show torso -->
   <svg class="strip-avatar" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <radialGradient id="sg_m" cx="48%" cy="36%" r="64%">
@@ -387,7 +386,7 @@
     <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
     <!-- Shoulders -->
     <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
-    <!-- ── TORSO BODY ── -->
+    <!-- TORSO BODY -->
     <rect x="34" y="219" width="172" height="66" fill="#0e1535"/>
     <!-- V collar -->
     <path d="M 94 204 L 120 228 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
@@ -407,8 +406,6 @@
     <line x1="190" y1="222" x2="196" y2="285" stroke="rgba(0,224,200,.07)" stroke-width="1.2"/>
     <!-- Bottom fade -->
     <rect x="34" y="265" width="172" height="20" fill="url(#fadeB_m)"/>
-    <!-- V collar -->
-    <path d="M 94 204 L 120 220 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.5" stroke-linejoin="round"/>
     <!-- Neck -->
     <rect x="104" y="185" width="32" height="22" rx="4" fill="url(#sg_m)"/>
     <!-- Face -->
@@ -434,6 +431,8 @@
     <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
     <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
     <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <!-- ★ MOBILE eyelid left — animated by JS -->
+    <ellipse id="lidL_m" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
     <!-- Right Eye -->
     <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
     <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
@@ -441,11 +440,24 @@
     <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
     <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
     <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <!-- ★ MOBILE eyelid right — animated by JS -->
+    <ellipse id="lidR_m" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
     <!-- Nose -->
     <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
     <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-    <!-- Mouth closed -->
-    <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150 Q 120 161 105 150 Z" fill="#de8080"/>
+    <!-- ★ MOBILE Mouth closed — toggled by JS -->
+    <g id="mc_m">
+      <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
+      <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
+      <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
+    </g>
+    <!-- ★ MOBILE Mouth open — toggled by JS -->
+    <g id="mo_m" style="opacity:0">
+      <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
+      <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
+      <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
+      <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
+    </g>
     <!-- Blush -->
     <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
     <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
@@ -484,7 +496,6 @@
 
     <div class="cwrap">
       <div class="glow-ring" id="glowRing"></div>
-      <!-- Desktop SVG: viewBox extended to show torso/bust -->
       <svg class="char-svg" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="sg" cx="48%" cy="36%" r="64%">
@@ -515,33 +526,24 @@
         <!-- Shoulders base -->
         <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
 
-        <!-- ══ TORSO — no arms, just bust ══ -->
-        <!-- Main body rectangle -->
+        <!-- TORSO -->
         <rect x="34" y="219" width="172" height="71" fill="#0e1535"/>
-        <!-- Subtle shoulder curve overlay -->
         <path d="M 34 220 Q 60 232 90 238 L 90 290 L 34 290 Z" fill="#0d1232" opacity=".5"/>
         <path d="M 206 220 Q 180 232 150 238 L 150 290 L 206 290 Z" fill="#0d1232" opacity=".5"/>
-        <!-- V collar -->
         <path d="M 93 204 L 120 230 L 147 204" fill="rgba(0,224,200,.04)" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
-        <!-- Center uniform seam -->
         <line x1="120" y1="230" x2="120" y2="290" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
-        <!-- Horizontal chest line -->
         <line x1="60" y1="238" x2="91" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
         <line x1="149" y1="238" x2="180" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
-        <!-- Chest panel badge -->
         <rect x="96" y="240" width="48" height="32" rx="4.5" fill="rgba(0,224,200,.04)" stroke="rgba(0,224,200,.24)" stroke-width=".9"/>
         <line x1="103" y1="248" x2="138" y2="248" stroke="rgba(0,224,200,.6)" stroke-width=".9"/>
         <line x1="103" y1="253" x2="132" y2="253" stroke="rgba(0,224,200,.32)" stroke-width=".8"/>
         <line x1="103" y1="258" x2="126" y2="258" stroke="rgba(0,224,200,.18)" stroke-width=".8"/>
-        <!-- Chest pulsing indicator -->
         <circle cx="136" cy="256" r="5" fill="none" stroke="rgba(0,224,200,.35)" stroke-width=".9"/>
         <circle cx="136" cy="256" r="2.5" fill="#00e8d0">
           <animate attributeName="opacity" values=".15;.9;.15" dur="2.2s" repeatCount="indefinite"/>
         </circle>
-        <!-- Side seam accent lines -->
         <line x1="50" y1="224" x2="43" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
         <line x1="190" y1="224" x2="197" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
-        <!-- Bottom fade so it blends into panel -->
         <rect x="34" y="268" width="172" height="22" fill="url(#fadeB)"/>
 
         <!-- Neck -->
@@ -556,7 +558,6 @@
         <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
         <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
         <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
-        <!-- Earrings -->
         <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
         <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
         <circle cx="54" cy="128" r="1.6" fill="white" opacity=".55"/>
@@ -566,7 +567,6 @@
         <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
         <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
         <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
-        <!-- Hair highlights -->
         <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
         <path d="M 68 52 Q 66 70 67 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
         <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
@@ -722,6 +722,8 @@
    CONFIGURAÇÕES GLOBAIS
 ═══════════════════════════════════════════ */
 const getUrl = () => '/api/comando';
+const STATUS_URL = '/api/status';       // ← endpoint de leitura real do ESP32
+const STATUS_INTERVAL = 4000;          // ← polling a cada 4 s
 
 let wantListening = false;
 let isSpeaking    = false;
@@ -729,6 +731,25 @@ let recog         = null;
 let currentVoice  = null;
 let speakTimer    = null;
 let blinkTimer    = null;
+
+/* ═══════════════════════════════════════════
+   HELPER — opera em desktop + mobile ao mesmo tempo
+═══════════════════════════════════════════ */
+function svgEl(...ids) {
+  return ids.map(id => document.getElementById(id)).filter(Boolean);
+}
+function svgOpacity(ids, val) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.opacity = val;
+  });
+}
+function svgAttr(ids, attr, val) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute(attr, val);
+  });
+}
 
 /* ═══════════════════════════════════════════
    ESTADOS DA PERSONAGEM
@@ -758,30 +779,28 @@ function setState(s) {
   if (s === 'speaking') startSpeak(); else stopSpeak();
 }
 
+/* ── Boca: desktop (mc/mo) + mobile (mc_m/mo_m) ── */
 function startSpeak() {
   let o = false;
   speakTimer = setInterval(() => {
     o = !o;
-    const mo = document.getElementById('mo');
-    const mc = document.getElementById('mc');
-    if (mo) mo.style.opacity = o ? '1' : '0';
-    if (mc) mc.style.opacity = o ? '0' : '1';
+    svgOpacity(['mo', 'mo_m'], o ? '1' : '0');
+    svgOpacity(['mc', 'mc_m'], o ? '0' : '1');
   }, 110 + Math.random() * 80);
 }
 function stopSpeak() {
   if (speakTimer) { clearInterval(speakTimer); speakTimer = null; }
-  const mo = document.getElementById('mo');
-  const mc = document.getElementById('mc');
-  if (mo) mo.style.opacity = '0';
-  if (mc) mc.style.opacity = '1';
+  svgOpacity(['mo', 'mo_m'], '0');
+  svgOpacity(['mc', 'mc_m'], '1');
 }
 
+/* ── Piscada: desktop (lidL/lidR) + mobile (lidL_m/lidR_m) ── */
 function blink() {
-  document.getElementById('lidL')?.setAttribute('opacity','1');
-  document.getElementById('lidR')?.setAttribute('opacity','1');
+  svgAttr(['lidL', 'lidL_m'], 'opacity', '1');
+  svgAttr(['lidR', 'lidR_m'], 'opacity', '1');
   setTimeout(() => {
-    document.getElementById('lidL')?.setAttribute('opacity','0');
-    document.getElementById('lidR')?.setAttribute('opacity','0');
+    svgAttr(['lidL', 'lidL_m'], 'opacity', '0');
+    svgAttr(['lidR', 'lidR_m'], 'opacity', '0');
   }, 135);
 }
 function scheduleBlink() {
@@ -790,24 +809,9 @@ function scheduleBlink() {
 scheduleBlink();
 
 /* ═══════════════════════════════════════════
-   DISPOSITIVOS — COM PARSING LOCAL
+   DISPOSITIVOS — UI helpers
 ═══════════════════════════════════════════ */
 const msgsEl = document.getElementById('msgs');
-
-/** Tenta extrair comando do texto do usuário (fallback offline) */
-function parseLocalCommand(text) {
-  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if (/acend|liga.*luz|luz.*liga|luz.*on|led.*on|lig.*led/.test(t))
-    return { cmd: 'led_on', param: null };
-  if (/apag|deslig.*luz|luz.*deslig|luz.*off|led.*off|deslig.*led/.test(t))
-    return { cmd: 'led_off', param: null };
-  const m = t.match(/(?:servo|gir|rot|pos|mov).*?(\d{1,3})|(\d{1,3}).*?(?:grau|servo|gir)/);
-  if (m) {
-    const angle = parseInt(m[1] || m[2]);
-    if (angle >= 0 && angle <= 180) return { cmd: 'servo_angle', param: angle };
-  }
-  return null;
-}
 
 function updateDevs(cmd, param) {
   const rowLuz   = document.getElementById('drow-luz');
@@ -835,6 +839,59 @@ function updateDevs(cmd, param) {
   }
 }
 
+/* ═══════════════════════════════════════════
+   POLLING REAL DO ESP32 — leitura de status
+   Espera resposta: { led: "on"|"off", servo: 0..180 }
+═══════════════════════════════════════════ */
+async function pollHardwareStatus() {
+  try {
+    const r = await fetch(STATUS_URL, { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+
+    // LED / luz
+    if (data.led !== undefined) {
+      const isOn = data.led === 'on' || data.led === true || data.led === 1;
+      updateDevs(isOn ? 'led_on' : 'led_off', null);
+    }
+    // Servo
+    if (data.servo !== undefined) {
+      const angle = parseInt(data.servo);
+      if (!isNaN(angle)) updateDevs('servo_angle', angle);
+    }
+    // MQTT status (opcional)
+    if (data.mqtt !== undefined) {
+      const mqttEl = document.getElementById('dmqtt');
+      if (mqttEl) {
+        mqttEl.textContent = data.mqtt ? 'ATIVO' : 'OFFLINE';
+        mqttEl.className   = data.mqtt ? 'dval' : 'dval off';
+      }
+    }
+  } catch(e) {
+    // ESP32 offline ou rota ainda não implementada — silencioso
+  }
+}
+// Inicia polling imediatamente e depois a cada STATUS_INTERVAL ms
+pollHardwareStatus();
+setInterval(pollHardwareStatus, STATUS_INTERVAL);
+
+/* ═══════════════════════════════════════════
+   PARSE LOCAL (fallback offline)
+═══════════════════════════════════════════ */
+function parseLocalCommand(text) {
+  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if (/acend|liga.*luz|luz.*liga|luz.*on|led.*on|lig.*led/.test(t))
+    return { cmd: 'led_on', param: null };
+  if (/apag|deslig.*luz|luz.*deslig|luz.*off|led.*off|deslig.*led/.test(t))
+    return { cmd: 'led_off', param: null };
+  const m = t.match(/(?:servo|gir|rot|pos|mov).*?(\d{1,3})|(\d{1,3}).*?(?:grau|servo|gir)/);
+  if (m) {
+    const angle = parseInt(m[1] || m[2]);
+    if (angle >= 0 && angle <= 180) return { cmd: 'servo_angle', param: angle };
+  }
+  return null;
+}
+
 function addMsg(text, role) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
@@ -860,7 +917,7 @@ function showToast(msg) {
 }
 
 /* ═══════════════════════════════════════════
-   TTS — COM SELEÇÃO ROBUSTA DE VOZ
+   TTS — remove TODOS os emojis antes de falar
 ═══════════════════════════════════════════ */
 let voiceList = [];
 
@@ -870,7 +927,6 @@ function populateVoiceList() {
 
   voiceList = all;
 
-  // PT first, then everything else
   const pt     = all.filter(v => v.lang.toLowerCase().startsWith('pt'));
   const others = all.filter(v => !v.lang.toLowerCase().startsWith('pt'));
   const sorted = [...pt, ...others];
@@ -886,15 +942,12 @@ function populateVoiceList() {
       return `<option value="${idx}">${label}</option>`;
     }).join('');
 
-    // Restore previous selection if still valid
     if (prevVal && [...sel.options].some(o => o.value === prevVal)) {
       sel.value = prevVal;
     } else if (pt.length > 0) {
-      // Default to first PT voice
       sel.value = String(all.indexOf(pt[0]));
     }
 
-    // Sync currentVoice on first load
     if (!currentVoice) {
       const idx = parseInt(sel.value);
       if (!isNaN(idx) && all[idx]) currentVoice = all[idx];
@@ -903,7 +956,6 @@ function populateVoiceList() {
   return true;
 }
 
-// Retry loading voices — important for Edge & Chrome
 let voiceRetries = 0;
 function tryLoadVoices() {
   if (populateVoiceList()) return;
@@ -912,7 +964,6 @@ function tryLoadVoices() {
 window.speechSynthesis.onvoiceschanged = () => { voiceRetries = 0; populateVoiceList(); };
 window.addEventListener('load', () => setTimeout(tryLoadVoices, 100));
 
-// Manual refresh button
 document.getElementById('voiceRefresh')?.addEventListener('click', () => {
   voiceRetries = 0;
   const ok = populateVoiceList();
@@ -924,7 +975,6 @@ document.getElementById('voiceRefresh')?.addEventListener('click', () => {
     const idx = parseInt(e.target.value);
     if (isNaN(idx)) return;
     currentVoice = voiceList[idx] || null;
-    // Sync the other selector
     ['voiceSelect','voiceSelectM'].forEach(sid => {
       const s = document.getElementById(sid);
       if (s && s.id !== id) s.value = idx;
@@ -939,7 +989,15 @@ function speak(text) {
   if (recog && wantListening) { try { recog.stop(); } catch(e){} }
   isSpeaking = true;
 
-  const clean = text.replace(/<[^>]+>/g,'').replace(/[💡⚙️✅❌⚠️📡]/g,'');
+  // Remove tags HTML + TODOS os emojis (unicode) + espaços extras
+  const clean = text
+    .replace(/<[^>]+>/g, '')
+    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')   // emojis suplementares (1F...)
+    .replace(/[\u{2600}-\u{27BF}]/gu,  '')    // símbolos misc (☀ ⚙ ✅ etc.)
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')   // emojis suplementares extras
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
   const utt   = new SpeechSynthesisUtterance(clean);
   utt.lang    = 'pt-BR';
   utt.rate    = 1.0;
@@ -1018,9 +1076,8 @@ async function send(text) {
   setState('thinking');
   document.getElementById('sbtn').disabled = true;
 
-  // Parse local command immediately so UI updates even offline
+  // NÃO atualiza UI localmente — aguarda confirmação real via polling
   const local = parseLocalCommand(text);
-  if (local) updateDevs(local.cmd, local.param);
 
   try {
     const r    = await fetch(getUrl(), {
@@ -1031,7 +1088,7 @@ async function send(text) {
     const data = await r.json();
     setTyping(false);
     const resp = data.resposta || data.response || data.message || JSON.stringify(data);
-    // Server command overrides local parse
+    // Atualiza UI com o que o servidor confirmou (opcional, polling vai confirmar de qualquer forma)
     if (data.comando) updateDevs(data.comando, data.parametro);
     setState('speaking');
     addMsg(resp, 'assistant');
@@ -1039,20 +1096,21 @@ async function send(text) {
     showToast('✓ Processado');
   } catch(e) {
     setTyping(false);
-    // Build contextual offline reply based on what was parsed
     let fallback;
     if (local) {
-      if (local.cmd === 'led_on')      fallback = '💡 Modo offline — luz <strong>ligada</strong> localmente.';
-      else if (local.cmd === 'led_off') fallback = '💡 Modo offline — luz <strong>desligada</strong> localmente.';
-      else if (local.cmd === 'servo_angle') fallback = `⚙️ Modo offline — servo ajustado para <strong>${local.param}°</strong> localmente.`;
+      if (local.cmd === 'led_on')           fallback = 'Modo offline — luz ligada localmente.';
+      else if (local.cmd === 'led_off')     fallback = 'Modo offline — luz desligada localmente.';
+      else if (local.cmd === 'servo_angle') fallback = `Modo offline — servo ajustado para ${local.param} graus localmente.`;
       else fallback = 'Desculpe, não consegui conectar ao servidor.';
+      // Fallback: aplica local apenas se offline
+      updateDevs(local.cmd, local.param);
     } else {
       fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique o endpoint da API.';
     }
     setState('speaking');
     addMsg(fallback, 'assistant');
     speak(fallback);
-    showToast('⚠ Modo offline');
+    showToast('Modo offline');
   } finally {
     document.getElementById('sbtn').disabled = false;
   }

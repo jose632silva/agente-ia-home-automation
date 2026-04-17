@@ -7,343 +7,197 @@
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07071a;
-      --pl: #0b0b22;
-      --teal: #00e0c8;
-      --purple: #9b7ce0;
-      --text: #dce8f0;
-      --muted: #506070;
-      --border: rgba(0, 224, 200, 0.12);
+      --bg: #07071a; --pl: #0b0b22; --teal: #00e0c8;
+      --purple: #9b7ce0; --text: #dce8f0; --muted: #506070;
+      --border: rgba(0,224,200,.12);
+      --red: #e05050; --orange: #e09030; --green: #40c880;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Exo 2', sans-serif;
-      height: 100dvh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Exo 2',sans-serif;
+           height:100dvh; overflow:hidden; display:flex; flex-direction:column; }
 
     /* ─── HEADER ─── */
-    .hdr {
-      display: flex;
-      align-items: center;
-      padding: 8px 18px;
-      border-bottom: 1px solid var(--border);
-      gap: 12px;
-      background: rgba(11, 11, 34, 0.97);
-      backdrop-filter: blur(12px);
-      flex-shrink: 0;
-      z-index: 10;
-    }
-    .hdr-logo { font-family: 'Orbitron', sans-serif; font-size: 16px; letter-spacing: 6px; color: var(--teal); }
-    .hdr-sub { font-size: 9px; color: var(--muted); letter-spacing: 2px; margin-top: 1px; }
-    .hdr-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
-      margin-left: auto; animation: dotpulse 2s infinite;
-    }
-    @keyframes dotpulse { 0%,100%{opacity:1} 50%{opacity:.15} }
+    .hdr { display:flex; align-items:center; padding:8px 18px;
+           border-bottom:1px solid var(--border); gap:12px;
+           background:rgba(11,11,34,.97); backdrop-filter:blur(12px);
+           flex-shrink:0; z-index:10; }
+    .hdr-logo { font-family:'Orbitron',sans-serif; font-size:16px;
+                letter-spacing:6px; color:var(--teal); }
+    .hdr-sub  { font-size:9px; color:var(--muted); letter-spacing:2px; margin-top:1px; }
+    .hdr-dot  { width:7px; height:7px; border-radius:50%; background:var(--teal);
+                margin-left:auto; animation:dotpulse 2s infinite; }
+    @keyframes dotpulse{0%,100%{opacity:1}50%{opacity:.15}}
 
-    /* ─── MAIN ─── */
-    .main {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      min-height: 0;
-    }
+    .main { display:flex; flex:1; overflow:hidden; min-height:0; }
 
-    /* ═══════════════════════
-       CHARACTER PANEL — DESKTOP
-    ═══════════════════════ */
-    .cpanel {
-      width: 290px;
-      min-width: 290px;
-      background: var(--pl);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 14px 12px;
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    .cpanel::before {
-      content: '';
-      position: absolute; inset: 0;
+    /* ─── CHARACTER PANEL ─── */
+    .cpanel { width:290px; min-width:290px; background:var(--pl);
+              border-right:1px solid var(--border);
+              display:flex; flex-direction:column; align-items:center;
+              padding:14px 12px; position:relative;
+              overflow-y:auto; overflow-x:hidden; }
+    .cpanel::before { content:''; position:absolute; inset:0;
       background-image:
-        linear-gradient(rgba(0,224,200,.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,224,200,.022) 1px, transparent 1px);
-      background-size: 34px 34px;
-      pointer-events: none;
-    }
+        linear-gradient(rgba(0,224,200,.022) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,224,200,.022) 1px,transparent 1px);
+      background-size:34px 34px; pointer-events:none; }
+    .cname  { font-family:'Orbitron',sans-serif; font-size:18px;
+              letter-spacing:8px; color:var(--teal); margin-bottom:2px; position:relative; }
+    .ctitle { font-size:9px; letter-spacing:2.5px; color:var(--muted);
+              margin-bottom:8px; position:relative; }
+    .cwrap  { position:relative; width:210px; height:320px; }
+    .char-svg { width:100%; height:100%; animation:float 4.2s ease-in-out infinite;
+                filter:drop-shadow(0 8px 32px rgba(0,224,200,.10)); }
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .glow-ring { position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+                 width:140px; height:140px; border-radius:50%;
+                 border:1.5px solid var(--teal); opacity:0; transition:opacity .35s; pointer-events:none; }
+    .glow-ring.on { opacity:.5; animation:ringpulse 1.6s ease-in-out infinite; }
+    @keyframes ringpulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.5}
+                         50%{transform:translateX(-50%) scale(1.14);opacity:.1}}
+    .sbadge { display:flex; align-items:center; gap:6px; padding:4px 14px;
+              border-radius:20px; border:1px solid var(--border);
+              font-size:9px; letter-spacing:2px; font-family:'Orbitron',sans-serif;
+              color:var(--muted); background:rgba(0,0,0,.3); transition:all .3s;
+              margin-top:6px; position:relative; }
+    .sbadge.listening { border-color:var(--teal); color:var(--teal); }
+    .sbadge.speaking  { border-color:var(--purple); color:var(--purple); }
+    .sdot { width:5px; height:5px; border-radius:50%; background:currentColor; }
 
-    .cname { font-family: 'Orbitron', sans-serif; font-size: 18px; letter-spacing: 8px; color: var(--teal); margin-bottom: 2px; position: relative; }
-    .ctitle { font-size: 9px; letter-spacing: 2.5px; color: var(--muted); margin-bottom: 8px; position: relative; }
+    /* ─── DEVICES ─── */
+    .devices { margin-top:10px; width:100%; display:flex;
+               flex-direction:column; gap:4px; position:relative; }
+    .drow { display:flex; align-items:center; justify-content:space-between;
+            padding:5px 10px; background:rgba(0,0,0,.2);
+            border:1px solid var(--border); border-radius:7px;
+            font-size:11px; transition:border-color .3s, background .3s; }
+    .drow.active { border-color:rgba(0,224,200,.3); }
+    .drow.warn   { border-color:rgba(224,144,48,.4); background:rgba(224,144,48,.04); }
+    .drow.alert  { border-color:rgba(224,80,80,.5);  background:rgba(224,80,80,.06); }
+    .dname { color:var(--muted); }
+    .dval  { font-family:'Orbitron',sans-serif; font-size:10px; color:var(--teal); }
+    .dval.off  { color:var(--muted); }
+    .dval.warn { color:var(--orange); }
+    .dval.alert{ color:var(--red); }
+    .dsec { font-size:8px; letter-spacing:2px; color:var(--muted);
+            margin-top:6px; margin-bottom:2px; padding-left:2px; }
 
-    .cwrap {
-      position: relative;
-      width: 210px;
-      height: 320px;
-    }
-
-    .char-svg {
-      width: 100%;
-      height: 100%;
-      animation: float 4.2s ease-in-out infinite;
-      filter: drop-shadow(0 8px 32px rgba(0,224,200,0.10));
-    }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
-
-    .glow-ring {
-      position: absolute;
-      bottom: 10px; left: 50%;
-      transform: translateX(-50%);
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      border: 1.5px solid var(--teal);
-      opacity: 0;
-      transition: opacity 0.35s;
-      pointer-events: none;
-    }
-    .glow-ring.on {
-      opacity: 0.5;
-      animation: ringpulse 1.6s ease-in-out infinite;
-    }
-    @keyframes ringpulse {
-      0%,100%{transform:translateX(-50%) scale(1); opacity:.5}
-      50%{transform:translateX(-50%) scale(1.14); opacity:.1}
-    }
-
-    .sbadge {
-      display: flex; align-items: center; gap: 6px;
-      padding: 4px 14px; border-radius: 20px;
-      border: 1px solid var(--border);
-      font-size: 9px; letter-spacing: 2px;
-      font-family: 'Orbitron', sans-serif;
-      color: var(--muted);
-      background: rgba(0,0,0,.3);
-      transition: all .3s;
-      margin-top: 6px;
-      position: relative;
-    }
-    .sbadge.listening { border-color: var(--teal); color: var(--teal); }
-    .sbadge.speaking  { border-color: var(--purple); color: var(--purple); }
-    .sdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-
-    .devices {
-      margin-top: 10px; width: 100%;
-      display: flex; flex-direction: column; gap: 5px;
-      position: relative;
-    }
-    .drow {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 6px 10px;
-      background: rgba(0,0,0,.2);
-      border: 1px solid var(--border); border-radius: 7px;
-      font-size: 11px;
-      transition: border-color .3s;
-    }
-    .drow.active { border-color: rgba(0,224,200,.3); }
-    .dname { color: var(--muted); }
-    .dval { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--teal); }
-    .dval.off { color: var(--muted); }
-
-    .api-cfg { margin-top: 8px; width: 100%; position: relative; }
-    .api-lbl { font-size: 9px; letter-spacing: 2px; color: var(--muted); margin-bottom: 3px; }
+    .api-cfg { margin-top:8px; width:100%; position:relative; }
+    .api-lbl { font-size:9px; letter-spacing:2px; color:var(--muted); margin-bottom:3px; }
     .api-cfg input, .api-cfg select {
-      width: 100%;
-      background: rgba(0,0,0,.3);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 5px 9px; border-radius: 5px;
-      font-size: 10px; font-family: 'Exo 2', sans-serif;
-      outline: none; transition: border-color .2s;
-    }
-    .api-cfg input:focus, .api-cfg select:focus {
-      border-color: rgba(0,224,200,.3); color: var(--teal);
-    }
+      width:100%; background:rgba(0,0,0,.3); border:1px solid var(--border);
+      color:var(--muted); padding:5px 9px; border-radius:5px;
+      font-size:10px; font-family:'Exo 2',sans-serif; outline:none; transition:border-color .2s; }
+    .api-cfg input:focus, .api-cfg select:focus { border-color:rgba(0,224,200,.3); color:var(--teal); }
+    .voice-wrap { display:flex; gap:5px; align-items:center; }
+    .voice-refresh { flex-shrink:0; width:26px; height:26px; background:rgba(0,0,0,.3);
+                     border:1px solid var(--border); color:var(--muted); border-radius:5px;
+                     cursor:pointer; display:flex; align-items:center; justify-content:center;
+                     transition:all .2s; font-size:11px; }
+    .voice-refresh:hover { border-color:rgba(0,224,200,.3); color:var(--teal); }
 
-    .voice-wrap { display: flex; gap: 5px; align-items: center; }
-    .voice-refresh {
-      flex-shrink: 0; width: 26px; height: 26px;
-      background: rgba(0,0,0,.3); border: 1px solid var(--border);
-      color: var(--muted); border-radius: 5px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all .2s; font-size: 11px;
-    }
-    .voice-refresh:hover { border-color: rgba(0,224,200,.3); color: var(--teal); }
-
-    /* ═══════════════════════
-       MOBILE CHARACTER STRIP
-    ═══════════════════════ */
-    .char-strip {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 14px;
-      background: var(--pl);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    .char-strip::before {
-      content: '';
-      position: absolute; inset: 0;
+    /* ─── MOBILE STRIP ─── */
+    .char-strip { display:none; align-items:center; gap:12px; padding:8px 14px;
+                  background:var(--pl); border-bottom:1px solid var(--border);
+                  flex-shrink:0; position:relative; overflow:hidden; }
+    .char-strip::before { content:''; position:absolute; inset:0;
       background-image:
-        linear-gradient(rgba(0,224,200,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,224,200,.018) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-    }
-    .strip-avatar {
-      width: 72px; height: 115px; flex-shrink: 0;
-      animation: float 4.2s ease-in-out infinite;
-      filter: drop-shadow(0 4px 16px rgba(0,224,200,.12));
-    }
-    .strip-info { flex: 1; min-width: 0; }
-    .strip-name { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 5px; color: var(--teal); }
-    .strip-status { font-size: 9px; letter-spacing: 1.5px; color: var(--muted); margin-top: 1px; }
-    .strip-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 14px;
-      border: 1px solid var(--border);
-      font-size: 8px; letter-spacing: 1.5px;
-      font-family: 'Orbitron', sans-serif;
-      color: var(--muted); background: rgba(0,0,0,.3);
-      transition: all .3s; margin-top: 5px;
-    }
-    .strip-badge.listening { border-color: var(--teal); color: var(--teal); }
-    .strip-badge.speaking  { border-color: var(--purple); color: var(--purple); }
-    .strip-devices {
-      display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
-    }
-    .strip-dev {
-      font-family: 'Orbitron', sans-serif; font-size: 8px;
-      padding: 2px 8px; border-radius: 10px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      white-space: nowrap;
-      transition: all .3s;
-    }
-    .strip-dev.on { border-color: rgba(0,224,200,.35); color: var(--teal); }
+        linear-gradient(rgba(0,224,200,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,224,200,.018) 1px,transparent 1px);
+      background-size:28px 28px; pointer-events:none; }
+    .strip-avatar { width:72px; height:115px; flex-shrink:0;
+                    animation:float 4.2s ease-in-out infinite;
+                    filter:drop-shadow(0 4px 16px rgba(0,224,200,.12)); }
+    .strip-info { flex:1; min-width:0; }
+    .strip-name   { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:5px; color:var(--teal); }
+    .strip-status { font-size:9px; letter-spacing:1.5px; color:var(--muted); margin-top:1px; }
+    .strip-badge { display:inline-flex; align-items:center; gap:5px;
+                   padding:3px 10px; border-radius:14px; border:1px solid var(--border);
+                   font-size:8px; letter-spacing:1.5px; font-family:'Orbitron',sans-serif;
+                   color:var(--muted); background:rgba(0,0,0,.3); transition:all .3s; margin-top:5px; }
+    .strip-badge.listening { border-color:var(--teal); color:var(--teal); }
+    .strip-badge.speaking  { border-color:var(--purple); color:var(--purple); }
+    .strip-devices { display:flex; gap:5px; align-items:center; flex-wrap:wrap; margin-top:5px; }
+    .strip-dev { font-family:'Orbitron',sans-serif; font-size:8px;
+                 padding:2px 7px; border-radius:10px; border:1px solid var(--border);
+                 color:var(--muted); white-space:nowrap; transition:all .3s; }
+    .strip-dev.on   { border-color:rgba(0,224,200,.35); color:var(--teal); }
+    .strip-dev.warn { border-color:rgba(224,144,48,.5); color:var(--orange); }
+    .strip-dev.alert{ border-color:rgba(224,80,80,.6);  color:var(--red); }
 
     /* ─── CHAT ─── */
-    .chat {
-      flex: 1; display: flex; flex-direction: column;
-      background: #080818; overflow: hidden; min-width: 0;
-    }
-    .msgs {
-      flex: 1; overflow-y: auto; overflow-x: hidden;
-      padding: 16px 16px 8px;
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .msgs::-webkit-scrollbar { width: 3px; }
-    .msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-    .msg { display: flex; gap: 8px; max-width: 88%; animation: fadein .28s ease; }
-    @keyframes fadein { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    .msg.user      { align-self: flex-end;   flex-direction: row-reverse; }
-    .msg.assistant { align-self: flex-start; }
-
-    .mav {
-      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Orbitron', sans-serif; font-size: 8px;
-    }
-    .msg.user      .mav { background: rgba(155,124,224,.10); border: 1px solid rgba(155,124,224,.28); color: var(--purple); }
-    .msg.assistant .mav { background: rgba(0,224,200,.08);  border: 1px solid rgba(0,224,200,.22);  color: var(--teal); }
-
-    .mbub { padding: 9px 13px; font-size: 13px; line-height: 1.65; }
-    .msg.user      .mbub { background: #131c38; border: 1px solid rgba(155,124,224,.16); border-radius: 12px 3px 12px 12px; }
-    .msg.assistant .mbub { background: #0b1424; border: 1px solid rgba(0,224,200,.11);  border-radius: 3px 12px 12px 12px; }
-    .mtime { font-size: 9px; color: var(--muted); margin-top: 3px; padding: 0 2px; }
-    .msg.user .mtime { text-align: right; }
-
-    .typing { display: none; gap: 5px; padding: 10px 13px; background: #0b1424; border: 1px solid rgba(0,224,200,.11); border-radius: 3px 12px 12px 12px; width: fit-content; }
-    .typing.on { display: flex; }
-    .tdot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: tbounce 1.2s infinite; }
+    .chat { flex:1; display:flex; flex-direction:column; background:#080818;
+            overflow:hidden; min-width:0; }
+    .msgs { flex:1; overflow-y:auto; overflow-x:hidden; padding:16px 16px 8px;
+            display:flex; flex-direction:column; gap:12px; }
+    .msgs::-webkit-scrollbar { width:3px; }
+    .msgs::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+    .msg { display:flex; gap:8px; max-width:88%; animation:fadein .28s ease; }
+    @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg.user      { align-self:flex-end;   flex-direction:row-reverse; }
+    .msg.assistant { align-self:flex-start; }
+    .mav { width:30px; height:30px; border-radius:50%; flex-shrink:0;
+           display:flex; align-items:center; justify-content:center;
+           font-family:'Orbitron',sans-serif; font-size:8px; }
+    .msg.user      .mav { background:rgba(155,124,224,.10); border:1px solid rgba(155,124,224,.28); color:var(--purple); }
+    .msg.assistant .mav { background:rgba(0,224,200,.08);  border:1px solid rgba(0,224,200,.22);  color:var(--teal); }
+    .mbub { padding:9px 13px; font-size:13px; line-height:1.65; }
+    .msg.user      .mbub { background:#131c38; border:1px solid rgba(155,124,224,.16); border-radius:12px 3px 12px 12px; }
+    .msg.assistant .mbub { background:#0b1424; border:1px solid rgba(0,224,200,.11);  border-radius:3px 12px 12px 12px; }
+    .mtime { font-size:9px; color:var(--muted); margin-top:3px; padding:0 2px; }
+    .msg.user .mtime { text-align:right; }
+    .typing { display:none; gap:5px; padding:10px 13px; background:#0b1424;
+              border:1px solid rgba(0,224,200,.11); border-radius:3px 12px 12px 12px; width:fit-content; }
+    .typing.on { display:flex; }
+    .tdot { width:6px; height:6px; border-radius:50%; background:var(--teal); animation:tbounce 1.2s infinite; }
     .tdot:nth-child(2){animation-delay:.2s} .tdot:nth-child(3){animation-delay:.4s}
-    @keyframes tbounce { 0%,60%,100%{transform:translateY(0);opacity:.25} 30%{transform:translateY(-5px);opacity:1} }
+    @keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.25}30%{transform:translateY(-5px);opacity:1}}
 
-    .iarea {
-      padding: 10px 14px;
-      border-top: 1px solid var(--border);
-      display: flex; gap: 7px; align-items: flex-end;
-      background: rgba(8,8,24,.97);
-      flex-shrink: 0;
-    }
+    .iarea { padding:10px 14px; border-top:1px solid var(--border);
+             display:flex; gap:7px; align-items:flex-end;
+             background:rgba(8,8,24,.97); flex-shrink:0; }
+    .vbtn { width:40px; height:40px; border-radius:50%; flex-shrink:0;
+            background:rgba(0,224,200,.05); border:1px solid rgba(0,224,200,.18);
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            color:var(--muted); transition:all .2s; -webkit-tap-highlight-color:transparent; }
+    .vbtn:hover { background:rgba(0,224,200,.12); border-color:var(--teal); color:var(--teal); }
+    .vbtn.on { background:rgba(0,224,200,.16); border-color:var(--teal); color:var(--teal);
+               animation:vpulse 1s infinite; }
+    @keyframes vpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,224,200,.28)}50%{box-shadow:0 0 0 8px rgba(0,224,200,0)}}
+    .iwrap { flex:1; background:rgba(0,0,0,.28); border:1px solid var(--border);
+             border-radius:10px; display:flex; align-items:flex-end; padding:7px 10px;
+             transition:border-color .2s; }
+    .iwrap:focus-within { border-color:rgba(0,224,200,.32); }
+    .tinput { flex:1; background:transparent; border:none; outline:none;
+              color:var(--text); font-family:'Exo 2',sans-serif; font-size:13px;
+              resize:none; max-height:90px; line-height:1.5; }
+    .tinput::placeholder { color:var(--muted); }
+    .sbtn { padding:0 15px; height:40px; flex-shrink:0;
+            background:rgba(0,224,200,.08); border:1px solid rgba(0,224,200,.28);
+            border-radius:9px; color:var(--teal); font-family:'Orbitron',sans-serif;
+            font-size:10px; letter-spacing:1px; cursor:pointer; transition:all .2s;
+            -webkit-tap-highlight-color:transparent; }
+    .sbtn:hover  { background:rgba(0,224,200,.18); }
+    .sbtn:active { transform:scale(0.97); }
+    .sbtn:disabled { opacity:.3; cursor:not-allowed; }
+    .toast { position:fixed; bottom:62px; left:50%;
+             transform:translateX(-50%) translateY(12px);
+             background:rgba(0,224,200,.1); border:1px solid rgba(0,224,200,.32);
+             color:var(--teal); padding:5px 14px; border-radius:14px;
+             font-size:10px; font-family:'Orbitron',sans-serif; letter-spacing:1px;
+             opacity:0; transition:all .28s; pointer-events:none; z-index:100; }
+    .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
 
-    .vbtn {
-      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(0,224,200,.05);
-      border: 1px solid rgba(0,224,200,.18);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--muted); transition: all .2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .vbtn:hover { background: rgba(0,224,200,.12); border-color: var(--teal); color: var(--teal); }
-    .vbtn.on {
-      background: rgba(0,224,200,.16); border-color: var(--teal); color: var(--teal);
-      animation: vpulse 1s infinite;
-    }
-    @keyframes vpulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,224,200,.28)} 50%{box-shadow:0 0 0 8px rgba(0,224,200,0)} }
-
-    .iwrap {
-      flex: 1; background: rgba(0,0,0,.28);
-      border: 1px solid var(--border); border-radius: 10px;
-      display: flex; align-items: flex-end; padding: 7px 10px;
-      transition: border-color .2s;
-    }
-    .iwrap:focus-within { border-color: rgba(0,224,200,.32); }
-
-    .tinput {
-      flex: 1; background: transparent; border: none; outline: none;
-      color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 13px;
-      resize: none; max-height: 90px; line-height: 1.5;
-    }
-    .tinput::placeholder { color: var(--muted); }
-
-    .sbtn {
-      padding: 0 15px; height: 40px; flex-shrink: 0;
-      background: rgba(0,224,200,.08); border: 1px solid rgba(0,224,200,.28);
-      border-radius: 9px; color: var(--teal);
-      font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px;
-      cursor: pointer; transition: all .2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .sbtn:hover  { background: rgba(0,224,200,.18); }
-    .sbtn:active { transform: scale(0.97); }
-    .sbtn:disabled { opacity: .3; cursor: not-allowed; }
-
-    .toast {
-      position: fixed; bottom: 62px; left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: rgba(0,224,200,.1); border: 1px solid rgba(0,224,200,.32);
-      color: var(--teal); padding: 5px 14px; border-radius: 14px;
-      font-size: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
-      opacity: 0; transition: all .28s; pointer-events: none; z-index: 100;
-    }
-    .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ═══════════════════════
-       RESPONSIVE — MOBILE
-    ═══════════════════════ */
-    @media (max-width: 680px) {
-      .cpanel       { display: none !important; }
-      .char-strip   { display: flex !important; }
-      .main         { flex-direction: column; }
-      .msg          { max-width: 96%; }
-      .mbub         { font-size: 12.5px; }
-      .hdr-logo     { font-size: 14px; letter-spacing: 4px; }
-      .hdr-sub      { display: none; }
-      .sbtn         { padding: 0 12px; font-size: 9px; }
-      .iarea        { padding: 8px 10px; gap: 6px; }
+    @media (max-width:680px) {
+      .cpanel     { display:none !important; }
+      .char-strip { display:flex !important; }
+      .main       { flex-direction:column; }
+      .msg        { max-width:96%; }
+      .mbub       { font-size:12.5px; }
+      .hdr-logo   { font-size:14px; letter-spacing:4px; }
+      .hdr-sub    { display:none; }
+      .sbtn       { padding:0 12px; font-size:9px; }
+      .iarea      { padding:8px 10px; gap:6px; }
     }
   </style>
 </head>
@@ -357,130 +211,80 @@
   <div class="hdr-dot"></div>
 </header>
 
-<!-- ═══════════ MOBILE CHARACTER STRIP ═══════════ -->
+<!-- ═══════ MOBILE CHARACTER STRIP ═══════ -->
 <div class="char-strip" id="charStrip">
   <svg class="strip-avatar" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <radialGradient id="sg_m" cx="48%" cy="36%" r="64%">
-        <stop offset="0%" stop-color="#fde8c8"/>
-        <stop offset="100%" stop-color="#f0b888"/>
-      </radialGradient>
-      <radialGradient id="ig_m" cx="30%" cy="25%" r="78%">
-        <stop offset="0%" stop-color="#00f5e0"/>
-        <stop offset="60%" stop-color="#00b8d4"/>
-        <stop offset="100%" stop-color="#006890"/>
-      </radialGradient>
-      <radialGradient id="hg_m" cx="40%" cy="20%" r="70%">
-        <stop offset="0%" stop-color="#1a0a38"/>
-        <stop offset="100%" stop-color="#08021a"/>
-      </radialGradient>
-      <linearGradient id="fadeB_m" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/>
-      </linearGradient>
+      <radialGradient id="sg_m" cx="48%" cy="36%" r="64%"><stop offset="0%" stop-color="#fde8c8"/><stop offset="100%" stop-color="#f0b888"/></radialGradient>
+      <radialGradient id="ig_m" cx="30%" cy="25%" r="78%"><stop offset="0%" stop-color="#00f5e0"/><stop offset="60%" stop-color="#00b8d4"/><stop offset="100%" stop-color="#006890"/></radialGradient>
+      <radialGradient id="hg_m" cx="40%" cy="20%" r="70%"><stop offset="0%" stop-color="#1a0a38"/><stop offset="100%" stop-color="#08021a"/></radialGradient>
+      <linearGradient id="fadeB_m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/><stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/></linearGradient>
     </defs>
-    <!-- Back hair -->
     <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg_m)"/>
-    <!-- Side strands -->
     <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
     <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
-    <!-- Shoulders -->
     <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
-    <!-- TORSO BODY -->
     <rect x="34" y="219" width="172" height="66" fill="#0e1535"/>
-    <!-- V collar -->
     <path d="M 94 204 L 120 228 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
-    <!-- Uniform center seam -->
     <line x1="120" y1="228" x2="120" y2="285" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
-    <!-- Chest panel badge -->
     <rect x="97" y="237" width="46" height="30" rx="4" fill="rgba(0,224,200,.05)" stroke="rgba(0,224,200,.22)" stroke-width=".9"/>
     <line x1="103" y1="244" x2="137" y2="244" stroke="rgba(0,224,200,.55)" stroke-width=".9"/>
     <line x1="103" y1="249" x2="131" y2="249" stroke="rgba(0,224,200,.3)" stroke-width=".8"/>
-    <line x1="103" y1="254" x2="125" y2="254" stroke="rgba(0,224,200,.18)" stroke-width=".8"/>
-    <circle cx="135" cy="253" r="4" fill="none" stroke="rgba(0,224,200,.38)" stroke-width=".8"/>
-    <circle cx="135" cy="253" r="2" fill="#00f0dc">
-      <animate attributeName="opacity" values=".2;.9;.2" dur="2.2s" repeatCount="indefinite"/>
-    </circle>
-    <!-- Side uniform details -->
-    <line x1="50" y1="222" x2="44" y2="285" stroke="rgba(0,224,200,.07)" stroke-width="1.2"/>
-    <line x1="190" y1="222" x2="196" y2="285" stroke="rgba(0,224,200,.07)" stroke-width="1.2"/>
-    <!-- Bottom fade -->
+    <circle cx="135" cy="253" r="2" fill="#00f0dc"><animate attributeName="opacity" values=".2;.9;.2" dur="2.2s" repeatCount="indefinite"/></circle>
     <rect x="34" y="265" width="172" height="20" fill="url(#fadeB_m)"/>
-    <!-- Neck -->
     <rect x="104" y="185" width="32" height="22" rx="4" fill="url(#sg_m)"/>
-    <!-- Face -->
     <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg_m)"/>
-    <!-- Ears -->
     <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
     <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
-    <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
-    <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
     <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
     <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
-    <!-- Bangs -->
     <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
     <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
     <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
-    <!-- Eyebrows -->
     <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
     <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-    <!-- Left Eye -->
     <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
-    <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
     <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
     <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
     <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
     <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
-    <!-- ★ MOBILE eyelid left — animated by JS -->
     <ellipse id="lidL_m" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-    <!-- Right Eye -->
     <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
-    <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
     <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
     <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
     <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
     <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
-    <!-- ★ MOBILE eyelid right — animated by JS -->
     <ellipse id="lidR_m" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-    <!-- Nose -->
     <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
     <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-    <!-- ★ MOBILE Mouth closed — toggled by JS -->
     <g id="mc_m">
-      <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
-      <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
-      <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
+      <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060"/>
+      <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080"/>
     </g>
-    <!-- ★ MOBILE Mouth open — toggled by JS -->
     <g id="mo_m" style="opacity:0">
       <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
       <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
       <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
-      <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
     </g>
-    <!-- Blush -->
     <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
     <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
-    <!-- Headset -->
     <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
-    <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
-      <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
-    </circle>
     <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
   </svg>
   <div class="strip-info">
     <div class="strip-name">ARIA</div>
     <div class="strip-status">MODELO v2.4 · ONLINE</div>
     <div class="strip-badge" id="stripBadge"><div class="sdot"></div><span id="stripTxt">AGUARDANDO</span></div>
-    <div class="strip-devices" style="margin-top:5px">
+    <div class="strip-devices">
       <div class="strip-dev" id="sdluz">LUZ: OFF</div>
-      <div class="strip-dev" id="sdservo">SERVO: 0°</div>
+      <div class="strip-dev" id="sdtemp">TEMP: --</div>
+      <div class="strip-dev" id="sdestado">NORMAL</div>
     </div>
   </div>
   <div style="flex-shrink:0">
     <div class="api-cfg" style="width:110px">
       <div class="api-lbl">VOZ</div>
-      <select id="voiceSelectM" style="font-size:9px; padding:4px 6px">
+      <select id="voiceSelectM" style="font-size:9px;padding:4px 6px">
         <option value="">Carregando...</option>
       </select>
     </div>
@@ -489,270 +293,219 @@
 
 <div class="main">
 
-  <!-- ═══════════ DESKTOP CHARACTER PANEL ═══════════ -->
-  <div class="cpanel">
-    <div class="cname">ARIA</div>
-    <div class="ctitle">MODELO v2.4 · ONLINE</div>
+<!-- ═══════ DESKTOP PANEL ═══════ -->
+<div class="cpanel">
+  <div class="cname">ARIA</div>
+  <div class="ctitle">MODELO v2.4 · ONLINE</div>
+  <div class="cwrap">
+    <div class="glow-ring" id="glowRing"></div>
+    <svg class="char-svg" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sg" cx="48%" cy="36%" r="64%"><stop offset="0%" stop-color="#fde8c8"/><stop offset="100%" stop-color="#f0b888"/></radialGradient>
+        <radialGradient id="ig" cx="30%" cy="25%" r="78%"><stop offset="0%" stop-color="#00f5e0"/><stop offset="60%" stop-color="#00b8d4"/><stop offset="100%" stop-color="#006890"/></radialGradient>
+        <radialGradient id="hg" cx="40%" cy="20%" r="70%"><stop offset="0%" stop-color="#1a0a38"/><stop offset="100%" stop-color="#08021a"/></radialGradient>
+        <linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/><stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/></linearGradient>
+      </defs>
+      <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg)"/>
+      <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
+      <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
+      <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
+      <rect x="34" y="219" width="172" height="71" fill="#0e1535"/>
+      <path d="M 34 220 Q 60 232 90 238 L 90 290 L 34 290 Z" fill="#0d1232" opacity=".5"/>
+      <path d="M 206 220 Q 180 232 150 238 L 150 290 L 206 290 Z" fill="#0d1232" opacity=".5"/>
+      <path d="M 93 204 L 120 230 L 147 204" fill="rgba(0,224,200,.04)" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
+      <line x1="120" y1="230" x2="120" y2="290" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
+      <rect x="96" y="240" width="48" height="32" rx="4.5" fill="rgba(0,224,200,.04)" stroke="rgba(0,224,200,.24)" stroke-width=".9"/>
+      <line x1="103" y1="248" x2="138" y2="248" stroke="rgba(0,224,200,.6)" stroke-width=".9"/>
+      <line x1="103" y1="253" x2="132" y2="253" stroke="rgba(0,224,200,.32)" stroke-width=".8"/>
+      <circle cx="136" cy="256" r="2.5" fill="#00e8d0"><animate attributeName="opacity" values=".15;.9;.15" dur="2.2s" repeatCount="indefinite"/></circle>
+      <rect x="34" y="268" width="172" height="22" fill="url(#fadeB)"/>
+      <rect x="104" y="185" width="32" height="24" rx="4" fill="url(#sg)"/>
+      <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg)"/>
+      <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+      <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+      <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+      <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+      <circle cx="54" cy="128" r="1.6" fill="white" opacity=".55"/>
+      <circle cx="186" cy="128" r="1.6" fill="white" opacity=".55"/>
+      <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
+      <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
+      <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
+      <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+      <path d="M 68 52 Q 66 70 67 90" fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
+      <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+      <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+      <g id="eyeL">
+        <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
+        <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+        <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+        <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
+        <ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+        <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+        <line x1="80" y1="97" x2="77" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="87" y1="92" x2="86" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="95" y1="91" x2="95" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="103" y1="92" x2="104" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="110" y1="97" x2="112" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M 78 109 Q 95 117 112 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+      </g>
+      <g id="eyeR">
+        <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
+        <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+        <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+        <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
+        <ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+        <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+        <line x1="130" y1="97" x2="127" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="137" y1="92" x2="136" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="145" y1="91" x2="145" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="153" y1="92" x2="154" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="160" y1="97" x2="162" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M 128 109 Q 145 117 162 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+      </g>
+      <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+      <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+      <g id="mc">
+        <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060"/>
+        <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080"/>
+      </g>
+      <g id="mo" style="opacity:0">
+        <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
+        <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
+        <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
+      </g>
+      <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
+      <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
+      <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
+      <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
+    </svg>
+  </div>
 
-    <div class="cwrap">
-      <div class="glow-ring" id="glowRing"></div>
-      <svg class="char-svg" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="sg" cx="48%" cy="36%" r="64%">
-            <stop offset="0%" stop-color="#fde8c8"/>
-            <stop offset="100%" stop-color="#f0b888"/>
-          </radialGradient>
-          <radialGradient id="ig" cx="30%" cy="25%" r="78%">
-            <stop offset="0%" stop-color="#00f5e0"/>
-            <stop offset="60%" stop-color="#00b8d4"/>
-            <stop offset="100%" stop-color="#006890"/>
-          </radialGradient>
-          <radialGradient id="hg" cx="40%" cy="20%" r="70%">
-            <stop offset="0%" stop-color="#1a0a38"/>
-            <stop offset="100%" stop-color="#08021a"/>
-          </radialGradient>
-          <linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/>
-            <stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/>
-          </linearGradient>
-        </defs>
+  <div class="sbadge" id="sbadge"><div class="sdot"></div><span id="stxt">AGUARDANDO</span></div>
 
-        <!-- Back hair -->
-        <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg)"/>
-        <!-- Side strands -->
-        <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
-        <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
-
-        <!-- Shoulders base -->
-        <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
-
-        <!-- TORSO -->
-        <rect x="34" y="219" width="172" height="71" fill="#0e1535"/>
-        <path d="M 34 220 Q 60 232 90 238 L 90 290 L 34 290 Z" fill="#0d1232" opacity=".5"/>
-        <path d="M 206 220 Q 180 232 150 238 L 150 290 L 206 290 Z" fill="#0d1232" opacity=".5"/>
-        <path d="M 93 204 L 120 230 L 147 204" fill="rgba(0,224,200,.04)" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
-        <line x1="120" y1="230" x2="120" y2="290" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
-        <line x1="60" y1="238" x2="91" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
-        <line x1="149" y1="238" x2="180" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
-        <rect x="96" y="240" width="48" height="32" rx="4.5" fill="rgba(0,224,200,.04)" stroke="rgba(0,224,200,.24)" stroke-width=".9"/>
-        <line x1="103" y1="248" x2="138" y2="248" stroke="rgba(0,224,200,.6)" stroke-width=".9"/>
-        <line x1="103" y1="253" x2="132" y2="253" stroke="rgba(0,224,200,.32)" stroke-width=".8"/>
-        <line x1="103" y1="258" x2="126" y2="258" stroke="rgba(0,224,200,.18)" stroke-width=".8"/>
-        <circle cx="136" cy="256" r="5" fill="none" stroke="rgba(0,224,200,.35)" stroke-width=".9"/>
-        <circle cx="136" cy="256" r="2.5" fill="#00e8d0">
-          <animate attributeName="opacity" values=".15;.9;.15" dur="2.2s" repeatCount="indefinite"/>
-        </circle>
-        <line x1="50" y1="224" x2="43" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
-        <line x1="190" y1="224" x2="197" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
-        <rect x="34" y="268" width="172" height="22" fill="url(#fadeB)"/>
-
-        <!-- Neck -->
-        <rect x="104" y="185" width="32" height="24" rx="4" fill="url(#sg)"/>
-        <rect x="104" y="198" width="32" height="11" rx="0" fill="rgba(0,0,0,.08)"/>
-
-        <!-- Face -->
-        <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg)"/>
-
-        <!-- Ears -->
-        <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)"/>
-        <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
-        <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
-        <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
-        <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
-        <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
-        <circle cx="54" cy="128" r="1.6" fill="white" opacity=".55"/>
-        <circle cx="186" cy="128" r="1.6" fill="white" opacity=".55"/>
-
-        <!-- Bangs / Front hair -->
-        <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
-        <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
-        <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
-        <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
-        <path d="M 68 52 Q 66 70 67 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
-        <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
-        <path d="M 172 52 Q 174 70 173 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
-
-        <!-- Eyebrows -->
-        <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-
-        <!-- LEFT EYE -->
-        <g id="eyeL">
-          <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
-          <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
-          <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)"/>
-          <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
-          <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
-          <circle cx="90" cy="110" r="1.6" fill="white" opacity=".42"/>
-          <ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-          <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
-          <line x1="80" y1="97" x2="77" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="87" y1="92" x2="86" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="95" y1="91" x2="95" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="103" y1="92" x2="104" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="110" y1="97" x2="112" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <path d="M 78 109 Q 95 117 112 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
-        </g>
-
-        <!-- RIGHT EYE -->
-        <g id="eyeR">
-          <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
-          <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
-          <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)"/>
-          <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
-          <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
-          <circle cx="140" cy="110" r="1.6" fill="white" opacity=".42"/>
-          <ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-          <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
-          <line x1="130" y1="97" x2="127" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="137" y1="92" x2="136" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="145" y1="91" x2="145" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="153" y1="92" x2="154" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <line x1="160" y1="97" x2="162" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
-          <path d="M 128 109 Q 145 117 162 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
-        </g>
-
-        <!-- Nose -->
-        <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-        <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-        <path d="M 115 134 Q 120 138 125 134" fill="none" stroke="rgba(160,88,58,.15)" stroke-width="1"/>
-
-        <!-- MOUTH CLOSED -->
-        <g id="mc">
-          <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
-          <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
-          <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
-        </g>
-        <!-- MOUTH OPEN -->
-        <g id="mo" style="opacity:0">
-          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
-          <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
-          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
-          <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
-        </g>
-
-        <!-- Blush -->
-        <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
-        <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
-
-        <!-- Headset -->
-        <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
-        <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
-          <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
-      </svg>
-    </div><!-- cwrap -->
-
-    <div class="sbadge" id="sbadge">
-      <div class="sdot"></div>
-      <span id="stxt">AGUARDANDO</span>
+  <div class="devices">
+    <!-- ATUADORES -->
+    <div class="dsec">ATUADORES</div>
+    <div class="drow" id="drow-luz">
+      <span class="dname">💡 Luz</span>
+      <span class="dval off" id="dluz">DESLIGADA</span>
+    </div>
+    <div class="drow" id="drow-servo">
+      <span class="dname">⚙️ Servo</span>
+      <span class="dval off" id="dservo">0°</span>
+    </div>
+    <div class="drow" id="drow-sirene">
+      <span class="dname">🔔 Sirene</span>
+      <span class="dval off" id="dsirene">INATIVA</span>
+    </div>
+    <div class="drow" id="drow-bomba">
+      <span class="dname">🚿 Bomba</span>
+      <span class="dval off" id="dbomba">DESLIGADA</span>
     </div>
 
-    <div class="devices">
-      <div class="drow" id="drow-luz">
-        <span class="dname">💡 Luz</span>
-        <span class="dval off" id="dluz">DESLIGADA</span>
-      </div>
-      <div class="drow" id="drow-servo">
-        <span class="dname">⚙️ Servo</span>
-        <span class="dval off" id="dservo">0°</span>
-      </div>
-      <div class="drow active" id="drow-mqtt">
-        <span class="dname">📡 MQTT</span>
-        <span class="dval" id="dmqtt">ATIVO</span>
-      </div>
+    <!-- SENSORES -->
+    <div class="dsec">SENSORES</div>
+    <div class="drow" id="drow-temp">
+      <span class="dname">🌡️ Temperatura</span>
+      <span class="dval off" id="dtemp">--°C</span>
+    </div>
+    <div class="drow" id="drow-fumaca">
+      <span class="dname">💨 Fumaça</span>
+      <span class="dval off" id="dfumaca">-- PPM</span>
+    </div>
+    <div class="drow" id="drow-fogo">
+      <span class="dname">🔥 Fogo</span>
+      <span class="dval off" id="dfogo">NORMAL</span>
+    </div>
+    <div class="drow" id="drow-pressao">
+      <span class="dname">💧 Pressão</span>
+      <span class="dval off" id="dpressao">--%</span>
     </div>
 
-    <div class="api-cfg">
-      <div class="api-lbl">ENDPOINT DA API</div>
-      <input type="text" id="apiUrl" value="http://localhost:5000/api/comando" spellcheck="false"/>
+    <!-- SISTEMA -->
+    <div class="dsec">SISTEMA</div>
+    <div class="drow" id="drow-estado">
+      <span class="dname">⚠️ Estado</span>
+      <span class="dval" id="destado">NORMAL</span>
     </div>
-    <div class="api-cfg">
-      <div class="api-lbl">SELECIONE A VOZ</div>
-      <div class="voice-wrap">
-        <select id="voiceSelect" style="flex:1">
-          <option value="">Carregando vozes...</option>
-        </select>
-        <button class="voice-refresh" id="voiceRefresh" title="Recarregar vozes">↻</button>
-      </div>
-    </div>
-  </div><!-- cpanel -->
-
-  <!-- ═══════════ CHAT ═══════════ -->
-  <div class="chat">
-    <div class="msgs" id="msgs">
-      <div class="msg assistant">
-        <div class="mav">AI</div>
-        <div>
-          <div class="mbub">Olá! Sou a <strong>ARIA</strong>, sua assistente residencial inteligente. Posso controlar os dispositivos da sua casa. Tente: <em>"acenda a luz"</em>, <em>"apague a luz"</em> ou <em>"gire o servo para 90 graus"</em>.</div>
-          <div class="mtime">agora</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="padding:0 16px 6px">
-      <div class="typing" id="typing">
-        <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
-      </div>
-    </div>
-
-    <div class="iarea">
-      <button class="vbtn" id="vbtn" title="Falar por voz">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-          <line x1="12" y1="19" x2="12" y2="23"/>
-          <line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
-      </button>
-      <div class="iwrap">
-        <textarea class="tinput" id="tinput" placeholder="Digite um comando... (ex: acenda a luz)" rows="1"></textarea>
-      </div>
-      <button class="sbtn" id="sbtn">ENVIAR</button>
+    <div class="drow active" id="drow-mqtt">
+      <span class="dname">📡 MQTT</span>
+      <span class="dval" id="dmqtt">AGUARDANDO</span>
     </div>
   </div>
 
-</div><!-- main -->
+  <div class="api-cfg">
+    <div class="api-lbl">ENDPOINT DA API</div>
+    <input type="text" id="apiUrl" value="http://localhost:5000/api/comando" spellcheck="false"/>
+  </div>
+  <div class="api-cfg">
+    <div class="api-lbl">SELECIONE A VOZ</div>
+    <div class="voice-wrap">
+      <select id="voiceSelect" style="flex:1"><option value="">Carregando vozes...</option></select>
+      <button class="voice-refresh" id="voiceRefresh" title="Recarregar vozes">↻</button>
+    </div>
+  </div>
+</div><!-- cpanel -->
 
+<!-- ═══════ CHAT ═══════ -->
+<div class="chat">
+  <div class="msgs" id="msgs">
+    <div class="msg assistant">
+      <div class="mav">AI</div>
+      <div>
+        <div class="mbub">Olá! Sou a <strong>ARIA</strong>, sua assistente residencial inteligente. Posso controlar dispositivos e monitorar sua casa. Tente: <em>"acenda a luz"</em>, <em>"qual a temperatura?"</em> ou <em>"como está a casa?"</em></div>
+        <div class="mtime">agora</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 16px 6px">
+    <div class="typing" id="typing">
+      <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+    </div>
+  </div>
+  <div class="iarea">
+    <button class="vbtn" id="vbtn" title="Falar por voz">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </button>
+    <div class="iwrap">
+      <textarea class="tinput" id="tinput" placeholder="Digite um comando... (ex: qual a temperatura?)" rows="1"></textarea>
+    </div>
+    <button class="sbtn" id="sbtn">ENVIAR</button>
+  </div>
+</div>
+
+</div><!-- main -->
 <div class="toast" id="toast"></div>
 
 <script>
 /* ═══════════════════════════════════════════
-   CONFIGURAÇÕES GLOBAIS
+   CONFIG
 ═══════════════════════════════════════════ */
-const getUrl = () => '/api/comando';
-const STATUS_URL = '/api/status';       // ← endpoint de leitura real do ESP32
-const STATUS_INTERVAL = 4000;          // ← polling a cada 4 s
+const getUrl    = () => '/api/comando';
+const STATUS_URL     = '/api/status';
+const STATUS_INTERVAL = 3000;
 
-let wantListening = false;
-let isSpeaking    = false;
-let recog         = null;
-let currentVoice  = null;
-let speakTimer    = null;
-let blinkTimer    = null;
+let wantListening = false, isSpeaking = false;
+let recog = null, currentVoice = null, speakTimer = null, blinkTimer = null;
 
 /* ═══════════════════════════════════════════
-   HELPER — opera em desktop + mobile ao mesmo tempo
+   SVG helpers — desktop + mobile simultâneo
 ═══════════════════════════════════════════ */
-function svgEl(...ids) {
-  return ids.map(id => document.getElementById(id)).filter(Boolean);
-}
 function svgOpacity(ids, val) {
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.opacity = val;
-  });
+  ids.forEach(id => { const e = document.getElementById(id); if(e) e.style.opacity = val; });
 }
 function svgAttr(ids, attr, val) {
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.setAttribute(attr, val);
-  });
+  ids.forEach(id => { const e = document.getElementById(id); if(e) e.setAttribute(attr, val); });
 }
 
 /* ═══════════════════════════════════════════
-   ESTADOS DA PERSONAGEM
+   ESTADOS
 ═══════════════════════════════════════════ */
 function setState(s) {
   const badge = document.getElementById('sbadge');
@@ -760,298 +513,281 @@ function setState(s) {
   const ring  = document.getElementById('glowRing');
   const sbM   = document.getElementById('stripBadge');
   const stM   = document.getElementById('stripTxt');
-
   badge.className = 'sbadge';
-  if (sbM) sbM.className = 'strip-badge';
+  if(sbM) sbM.className = 'strip-badge';
   ring.classList.remove('on');
-
-  const map = {
-    idle:      ['AGUARDANDO', ''],
-    listening: ['OUVINDO...',  'listening'],
-    thinking:  ['PROCESSANDO',''],
-    speaking:  ['RESPONDENDO','speaking']
-  };
+  const map = { idle:['AGUARDANDO',''], listening:['OUVINDO...','listening'],
+                thinking:['PROCESSANDO',''], speaking:['RESPONDENDO','speaking'] };
   const [txt, cls] = map[s] || map.idle;
   stxt.textContent = txt;
-  if (stM) stM.textContent = txt;
-  if (cls) { badge.classList.add(cls); if (sbM) sbM.classList.add(cls); }
-  if (s === 'listening') ring.classList.add('on');
-  if (s === 'speaking') startSpeak(); else stopSpeak();
+  if(stM) stM.textContent = txt;
+  if(cls) { badge.classList.add(cls); if(sbM) sbM.classList.add(cls); }
+  if(s === 'listening') ring.classList.add('on');
+  if(s === 'speaking')  startSpeak(); else stopSpeak();
 }
 
-/* ── Boca: desktop (mc/mo) + mobile (mc_m/mo_m) ── */
 function startSpeak() {
   let o = false;
   speakTimer = setInterval(() => {
     o = !o;
-    svgOpacity(['mo', 'mo_m'], o ? '1' : '0');
-    svgOpacity(['mc', 'mc_m'], o ? '0' : '1');
-  }, 110 + Math.random() * 80);
+    svgOpacity(['mo','mo_m'], o ? '1' : '0');
+    svgOpacity(['mc','mc_m'], o ? '0' : '1');
+  }, 110 + Math.random()*80);
 }
 function stopSpeak() {
-  if (speakTimer) { clearInterval(speakTimer); speakTimer = null; }
-  svgOpacity(['mo', 'mo_m'], '0');
-  svgOpacity(['mc', 'mc_m'], '1');
+  if(speakTimer) { clearInterval(speakTimer); speakTimer = null; }
+  svgOpacity(['mo','mo_m'], '0');
+  svgOpacity(['mc','mc_m'], '1');
 }
 
-/* ── Piscada: desktop (lidL/lidR) + mobile (lidL_m/lidR_m) ── */
 function blink() {
-  svgAttr(['lidL', 'lidL_m'], 'opacity', '1');
-  svgAttr(['lidR', 'lidR_m'], 'opacity', '1');
+  svgAttr(['lidL','lidL_m'], 'opacity', '1');
+  svgAttr(['lidR','lidR_m'], 'opacity', '1');
   setTimeout(() => {
-    svgAttr(['lidL', 'lidL_m'], 'opacity', '0');
-    svgAttr(['lidR', 'lidR_m'], 'opacity', '0');
+    svgAttr(['lidL','lidL_m'], 'opacity', '0');
+    svgAttr(['lidR','lidR_m'], 'opacity', '0');
   }, 135);
 }
 function scheduleBlink() {
-  blinkTimer = setTimeout(() => { blink(); scheduleBlink(); }, 2600 + Math.random() * 4000);
+  blinkTimer = setTimeout(() => { blink(); scheduleBlink(); }, 2600 + Math.random()*4000);
 }
 scheduleBlink();
 
 /* ═══════════════════════════════════════════
-   DISPOSITIVOS — UI helpers
+   UPDATE DEVICES — atuadores + sensores
 ═══════════════════════════════════════════ */
-const msgsEl = document.getElementById('msgs');
+function setDrow(id, active, extra) {
+  const r = document.getElementById(id);
+  if(!r) return;
+  r.classList.remove('active','warn','alert');
+  if(extra) r.classList.add(extra);
+  else if(active) r.classList.add('active');
+}
+function setDval(id, text, cls) {
+  const e = document.getElementById(id);
+  if(!e) return;
+  e.textContent = text;
+  e.className   = 'dval' + (cls ? ' '+cls : '');
+}
 
-function updateDevs(cmd, param) {
-  const rowLuz   = document.getElementById('drow-luz');
-  const rowServo = document.getElementById('drow-servo');
+function updateAll(data) {
+  // ── LED ──
+  if(data.led !== undefined) {
+    const on = data.led === 'on' || data.led === true || data.led === 1;
+    setDval('dluz', on ? 'LIGADA' : 'DESLIGADA', on ? '' : 'off');
+    setDrow('drow-luz', on);
+    const sdluz = document.getElementById('sdluz');
+    if(sdluz) { sdluz.textContent = 'LUZ: ' + (on ? 'ON' : 'OFF');
+                sdluz.className = 'strip-dev' + (on ? ' on' : ''); }
+  }
 
-  if (cmd === 'led_on') {
-    document.getElementById('dluz').textContent  = 'LIGADA';
-    document.getElementById('dluz').className    = 'dval';
-    document.getElementById('sdluz').textContent = 'LUZ: ON';
-    document.getElementById('sdluz').className   = 'strip-dev on';
-    if (rowLuz) rowLuz.classList.add('active');
-  } else if (cmd === 'led_off') {
-    document.getElementById('dluz').textContent  = 'DESLIGADA';
-    document.getElementById('dluz').className    = 'dval off';
-    document.getElementById('sdluz').textContent = 'LUZ: OFF';
-    document.getElementById('sdluz').className   = 'strip-dev';
-    if (rowLuz) rowLuz.classList.remove('active');
-  } else if (cmd === 'servo_angle' && param !== null && param !== undefined) {
-    const a = param + '°';
-    document.getElementById('dservo').textContent  = a;
-    document.getElementById('dservo').className    = param > 0 ? 'dval' : 'dval off';
-    document.getElementById('sdservo').textContent = 'SERVO: ' + a;
-    document.getElementById('sdservo').className   = 'strip-dev' + (param > 0 ? ' on' : '');
-    if (rowServo) rowServo.classList.toggle('active', param > 0);
+  // ── SERVO ──
+  if(data.servo !== undefined) {
+    const a = parseInt(data.servo);
+    setDval('dservo', a + '°', a > 0 ? '' : 'off');
+    setDrow('drow-servo', a > 0);
+  }
+
+  // ── SIRENE ──
+  if(data.sirene !== undefined) {
+    const on = data.sirene === 1 || data.sirene === true;
+    setDval('dsirene', on ? 'ATIVA' : 'INATIVA', on ? 'alert' : 'off');
+    setDrow('drow-sirene', false, on ? 'alert' : null);
+  }
+
+  // ── BOMBA ──
+  if(data.bomba !== undefined) {
+    const on = data.bomba === 'Ligado' || data.bomba === true;
+    setDval('dbomba', on ? 'LIGADA' : 'DESLIGADA', on ? '' : 'off');
+    setDrow('drow-bomba', on);
+  }
+
+  // ── TEMPERATURA ──
+  if(data.temperatura !== undefined) {
+    const t = parseFloat(data.temperatura);
+    const txt = (t === -127 || isNaN(t)) ? 'ERRO' : t.toFixed(1) + '°C';
+    const cls = t >= 50 ? 'alert' : (t >= 40 ? 'warn' : '');
+    setDval('dtemp', txt, cls || (t < 0 ? 'off' : ''));
+    setDrow('drow-temp', !cls, cls || null);
+    // mobile badge
+    const sdtemp = document.getElementById('sdtemp');
+    if(sdtemp) {
+      sdtemp.textContent = 'TEMP: ' + (isNaN(t) || t === -127 ? '--' : t.toFixed(0) + '°');
+      sdtemp.className = 'strip-dev' + (cls === 'alert' ? ' alert' : cls === 'warn' ? ' warn' : ' on');
+    }
+  }
+
+  // ── FUMAÇA ──
+  if(data.fumaca !== undefined) {
+    const ppm = parseFloat(data.fumaca);
+    const cls = ppm >= 1000 ? 'alert' : (ppm >= 300 ? 'warn' : '');
+    setDval('dfumaca', ppm.toFixed(0) + ' PPM', cls || (ppm < 1 ? 'off' : ''));
+    setDrow('drow-fumaca', false, cls || null);
+  }
+
+  // ── FOGO ──
+  if(data.fogo !== undefined) {
+    const det = data.fogo !== 'normal' && data.fogo !== false;
+    setDval('dfogo', det ? 'DETECTADO' : 'NORMAL', det ? 'alert' : 'off');
+    setDrow('drow-fogo', false, det ? 'alert' : null);
+  }
+
+  // ── PRESSÃO ──
+  if(data.pressao !== undefined) {
+    const p = parseInt(data.pressao);
+    const cls = p < 30 ? 'warn' : '';
+    setDval('dpressao', p + '%', cls || (p <= 0 ? 'off' : ''));
+    setDrow('drow-pressao', p >= 30, cls || null);
+  }
+
+  // ── ESTADO ──
+  if(data.estado !== undefined) {
+    const e = String(data.estado).toUpperCase();
+    const cls = e === 'CRITICO' ? 'alert' : e === 'ALARME' ? 'alert' : e === 'PRE_ALARME' ? 'warn' : '';
+    setDval('destado', e, cls);
+    setDrow('drow-estado', !cls, cls || null);
+    const sde = document.getElementById('sdestado');
+    if(sde) { sde.textContent = e;
+               sde.className = 'strip-dev' + (cls === 'alert' ? ' alert' : cls === 'warn' ? ' warn' : ' on'); }
+  }
+
+  // ── MQTT ──
+  if(data.mqtt !== undefined) {
+    const on = data.mqtt === true || data.mqtt === 'true';
+    setDval('dmqtt', on ? 'ATIVO' : 'OFFLINE', on ? '' : 'off');
+    setDrow('drow-mqtt', on);
   }
 }
 
 /* ═══════════════════════════════════════════
-   POLLING REAL DO ESP32 — leitura de status
-   Espera resposta: { led: "on"|"off", servo: 0..180 }
+   POLLING ESP32 — leitura real
 ═══════════════════════════════════════════ */
 async function pollHardwareStatus() {
   try {
     const r = await fetch(STATUS_URL, { cache: 'no-store' });
-    if (!r.ok) return;
-    const data = await r.json();
-
-    // LED / luz
-    if (data.led !== undefined) {
-      const isOn = data.led === 'on' || data.led === true || data.led === 1;
-      updateDevs(isOn ? 'led_on' : 'led_off', null);
-    }
-    // Servo
-    if (data.servo !== undefined) {
-      const angle = parseInt(data.servo);
-      if (!isNaN(angle)) updateDevs('servo_angle', angle);
-    }
-    // MQTT status (opcional)
-    if (data.mqtt !== undefined) {
-      const mqttEl = document.getElementById('dmqtt');
-      if (mqttEl) {
-        mqttEl.textContent = data.mqtt ? 'ATIVO' : 'OFFLINE';
-        mqttEl.className   = data.mqtt ? 'dval' : 'dval off';
-      }
-    }
-  } catch(e) {
-    // ESP32 offline ou rota ainda não implementada — silencioso
-  }
+    if(!r.ok) return;
+    updateAll(await r.json());
+  } catch(e) { /* silencioso — ESP32 pode estar offline */ }
 }
-// Inicia polling imediatamente e depois a cada STATUS_INTERVAL ms
 pollHardwareStatus();
 setInterval(pollHardwareStatus, STATUS_INTERVAL);
 
 /* ═══════════════════════════════════════════
-   PARSE LOCAL (fallback offline)
+   CHAT helpers
 ═══════════════════════════════════════════ */
-function parseLocalCommand(text) {
-  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if (/acend|liga.*luz|luz.*liga|luz.*on|led.*on|lig.*led/.test(t))
-    return { cmd: 'led_on', param: null };
-  if (/apag|deslig.*luz|luz.*deslig|luz.*off|led.*off|deslig.*led/.test(t))
-    return { cmd: 'led_off', param: null };
-  const m = t.match(/(?:servo|gir|rot|pos|mov).*?(\d{1,3})|(\d{1,3}).*?(?:grau|servo|gir)/);
-  if (m) {
-    const angle = parseInt(m[1] || m[2]);
-    if (angle >= 0 && angle <= 180) return { cmd: 'servo_angle', param: angle };
-  }
-  return null;
-}
+const msgsEl = document.getElementById('msgs');
 
 function addMsg(text, role) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
-  const t = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
-  d.innerHTML = `
-    <div class="mav">${role==='user'?'EU':'AI'}</div>
-    <div>
-      <div class="mbub">${text}</div>
-      <div class="mtime">${t}</div>
-    </div>`;
+  const t = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML = `<div class="mav">${role==='user'?'EU':'AI'}</div>
+    <div><div class="mbub">${text}</div><div class="mtime">${t}</div></div>`;
   msgsEl.appendChild(d);
   msgsEl.scrollTop = msgsEl.scrollHeight;
 }
-
 function setTyping(v) {
   document.getElementById('typing').className = 'typing' + (v ? ' on' : '');
 }
 function showToast(msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('on');
+  el.textContent = msg; el.classList.add('on');
   setTimeout(() => el.classList.remove('on'), 3000);
 }
 
 /* ═══════════════════════════════════════════
-   TTS — remove TODOS os emojis antes de falar
+   TTS — sem emojis
 ═══════════════════════════════════════════ */
 let voiceList = [];
-
 function populateVoiceList() {
   const all = window.speechSynthesis.getVoices();
-  if (!all || !all.length) return false;
-
+  if(!all || !all.length) return false;
   voiceList = all;
-
-  const pt     = all.filter(v => v.lang.toLowerCase().startsWith('pt'));
-  const others = all.filter(v => !v.lang.toLowerCase().startsWith('pt'));
-  const sorted = [...pt, ...others];
-
+  const pt = all.filter(v => v.lang.toLowerCase().startsWith('pt'));
+  const sorted = [...pt, ...all.filter(v => !v.lang.toLowerCase().startsWith('pt'))];
   ['voiceSelect','voiceSelectM'].forEach(id => {
     const sel = document.getElementById(id);
-    if (!sel) return;
-    const prevVal = sel.value;
+    if(!sel) return;
+    const prev = sel.value;
     sel.innerHTML = sorted.map(v => {
-      const isPt  = v.lang.toLowerCase().startsWith('pt');
-      const label = (isPt ? '🇧🇷 ' : '') + v.name + ' (' + v.lang + ')';
-      const idx   = all.indexOf(v);
-      return `<option value="${idx}">${label}</option>`;
+      const idx = all.indexOf(v);
+      const lbl = (v.lang.toLowerCase().startsWith('pt') ? '🇧🇷 ' : '') + v.name + ' (' + v.lang + ')';
+      return `<option value="${idx}">${lbl}</option>`;
     }).join('');
-
-    if (prevVal && [...sel.options].some(o => o.value === prevVal)) {
-      sel.value = prevVal;
-    } else if (pt.length > 0) {
-      sel.value = String(all.indexOf(pt[0]));
-    }
-
-    if (!currentVoice) {
-      const idx = parseInt(sel.value);
-      if (!isNaN(idx) && all[idx]) currentVoice = all[idx];
-    }
+    if(prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+    else if(pt.length > 0) sel.value = String(all.indexOf(pt[0]));
+    if(!currentVoice) { const i = parseInt(sel.value); if(!isNaN(i) && all[i]) currentVoice = all[i]; }
   });
   return true;
 }
-
 let voiceRetries = 0;
-function tryLoadVoices() {
-  if (populateVoiceList()) return;
-  if (voiceRetries++ < 20) setTimeout(tryLoadVoices, 250);
-}
+function tryLoadVoices() { if(populateVoiceList()) return; if(voiceRetries++ < 20) setTimeout(tryLoadVoices, 250); }
 window.speechSynthesis.onvoiceschanged = () => { voiceRetries = 0; populateVoiceList(); };
 window.addEventListener('load', () => setTimeout(tryLoadVoices, 100));
-
 document.getElementById('voiceRefresh')?.addEventListener('click', () => {
   voiceRetries = 0;
   const ok = populateVoiceList();
-  showToast(ok ? '✓ ' + voiceList.length + ' vozes' : '⚠ Sem vozes — tente outro navegador');
+  showToast(ok ? '✓ ' + voiceList.length + ' vozes' : 'Sem vozes — tente outro navegador');
 });
-
 ['voiceSelect','voiceSelectM'].forEach(id => {
   document.getElementById(id)?.addEventListener('change', e => {
     const idx = parseInt(e.target.value);
-    if (isNaN(idx)) return;
+    if(isNaN(idx)) return;
     currentVoice = voiceList[idx] || null;
     ['voiceSelect','voiceSelectM'].forEach(sid => {
       const s = document.getElementById(sid);
-      if (s && s.id !== id) s.value = idx;
+      if(s && s.id !== id) s.value = idx;
     });
-    if (currentVoice) speak('Voz selecionada. Teste de funcionamento.');
+    if(currentVoice) speak('Voz selecionada. Teste de funcionamento.');
   });
 });
 
 function speak(text) {
-  if (!window.speechSynthesis) { setTimeout(() => setState('idle'), 2200); return; }
-
-  if (recog && wantListening) { try { recog.stop(); } catch(e){} }
+  if(!window.speechSynthesis) { setTimeout(() => setState('idle'), 2200); return; }
+  if(recog && wantListening) { try { recog.stop(); } catch(e){} }
   isSpeaking = true;
 
-  // Remove tags HTML + TODOS os emojis (unicode) + espaços extras
   const clean = text
     .replace(/<[^>]+>/g, '')
-    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')   // emojis suplementares (1F...)
-    .replace(/[\u{2600}-\u{27BF}]/gu,  '')    // símbolos misc (☀ ⚙ ✅ etc.)
-    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')   // emojis suplementares extras
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+    .replace(/[\u{2600}-\u{27BF}]/gu, '')
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
+    .replace(/\s{2,}/g, ' ').trim();
 
-  const utt   = new SpeechSynthesisUtterance(clean);
-  utt.lang    = 'pt-BR';
-  utt.rate    = 1.0;
-  utt.pitch   = 1.12;
-  if (currentVoice) utt.voice = currentVoice;
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = 'pt-BR'; utt.rate = 1.0; utt.pitch = 1.12;
+  if(currentVoice) utt.voice = currentVoice;
 
-  function afterSpeak() {
-    isSpeaking = false;
-    setState('idle');
-    if (wantListening && recog) {
-      setTimeout(() => {
-        if (wantListening && !isSpeaking) {
-          try { recog.start(); setState('listening'); } catch(e){}
-        }
-      }, 800);
+  function after() {
+    isSpeaking = false; setState('idle');
+    if(wantListening && recog) {
+      setTimeout(() => { if(wantListening && !isSpeaking) { try{ recog.start(); setState('listening'); }catch(e){} } }, 800);
     }
   }
-  utt.onend   = afterSpeak;
-  utt.onerror = afterSpeak;
+  utt.onend = after; utt.onerror = after;
   window.speechSynthesis.speak(utt);
 }
 
 /* ═══════════════════════════════════════════
-   RECONHECIMENTO DE VOZ
+   VOZ
 ═══════════════════════════════════════════ */
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recog = new SR();
-  recog.lang           = 'pt-BR';
-  recog.continuous     = true;
-  recog.interimResults = false;
-
+  recog.lang = 'pt-BR'; recog.continuous = true; recog.interimResults = false;
   recog.onresult = e => {
-    const t = e.results[e.results.length - 1][0].transcript;
-    document.getElementById('tinput').value = t;
-    send(t);
+    const t = e.results[e.results.length-1][0].transcript;
+    document.getElementById('tinput').value = t; send(t);
   };
-  recog.onend = () => {
-    if (wantListening && !isSpeaking) { try { recog.start(); } catch(e){} }
-  };
-  recog.onerror = () => {
-    if (wantListening && !isSpeaking) {
-      setTimeout(() => { try { recog.start(); } catch(e){} }, 500);
-    }
-  };
+  recog.onend  = () => { if(wantListening && !isSpeaking) { try{ recog.start(); }catch(e){} } };
+  recog.onerror= () => { if(wantListening && !isSpeaking) { setTimeout(()=>{ try{ recog.start(); }catch(e){} },500); } };
 }
-
 document.getElementById('vbtn').addEventListener('click', () => {
-  if (!recog) { showToast('Reconhecimento de voz não suportado'); return; }
-
-  if (wantListening) {
+  if(!recog) { showToast('Reconhecimento de voz não suportado'); return; }
+  if(wantListening) {
     wantListening = false;
-    try { recog.stop(); } catch(e){}
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    try{ recog.stop(); }catch(e){}
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
     isSpeaking = false;
     document.getElementById('vbtn').classList.remove('on');
     setState('idle');
@@ -1059,54 +795,40 @@ document.getElementById('vbtn').addEventListener('click', () => {
     wantListening = true;
     document.getElementById('vbtn').classList.add('on');
     setState('listening');
-    if (isSpeaking) { window.speechSynthesis.cancel(); isSpeaking = false; }
-    try { recog.start(); } catch(e){}
+    if(isSpeaking) { window.speechSynthesis.cancel(); isSpeaking = false; }
+    try{ recog.start(); }catch(e){}
   }
 });
 
 /* ═══════════════════════════════════════════
-   ENVIO DE COMANDOS
+   ENVIO
 ═══════════════════════════════════════════ */
 async function send(text) {
-  if (!text.trim()) return;
+  if(!text.trim()) return;
   addMsg(text, 'user');
   document.getElementById('tinput').value = '';
   document.getElementById('tinput').style.height = 'auto';
-  setTyping(true);
-  setState('thinking');
+  setTyping(true); setState('thinking');
   document.getElementById('sbtn').disabled = true;
-
-  // NÃO atualiza UI localmente — aguarda confirmação real via polling
-  const local = parseLocalCommand(text);
 
   try {
     const r    = await fetch(getUrl(), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mensagem: text })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({mensagem: text})
     });
     const data = await r.json();
     setTyping(false);
     const resp = data.resposta || data.response || data.message || JSON.stringify(data);
-    // Atualiza UI com o que o servidor confirmou (opcional, polling vai confirmar de qualquer forma)
-    if (data.comando) updateDevs(data.comando, data.parametro);
     setState('speaking');
     addMsg(resp, 'assistant');
     speak(resp);
-    showToast('✓ Processado');
+    // Força polling imediato após comando para atualizar UI mais rápido
+    setTimeout(pollHardwareStatus, 600);
+    setTimeout(pollHardwareStatus, 1800);
+    showToast('Processado');
   } catch(e) {
     setTyping(false);
-    let fallback;
-    if (local) {
-      if (local.cmd === 'led_on')           fallback = 'Modo offline — luz ligada localmente.';
-      else if (local.cmd === 'led_off')     fallback = 'Modo offline — luz desligada localmente.';
-      else if (local.cmd === 'servo_angle') fallback = `Modo offline — servo ajustado para ${local.param} graus localmente.`;
-      else fallback = 'Desculpe, não consegui conectar ao servidor.';
-      // Fallback: aplica local apenas se offline
-      updateDevs(local.cmd, local.param);
-    } else {
-      fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique o endpoint da API.';
-    }
+    const fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique se o servidor está rodando.';
     setState('speaking');
     addMsg(fallback, 'assistant');
     speak(fallback);
@@ -1116,18 +838,15 @@ async function send(text) {
   }
 }
 
-/* ═══════════════════════════════════════════
-   EVENTOS DE TEXTO
-═══════════════════════════════════════════ */
 document.getElementById('sbtn').addEventListener('click', () => {
   const v = document.getElementById('tinput').value.trim();
-  if (v) send(v);
+  if(v) send(v);
 });
 document.getElementById('tinput').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
+  if(e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     const v = e.target.value.trim();
-    if (v) send(v);
+    if(v) send(v);
   }
 });
 document.getElementById('tinput').addEventListener('input', e => {

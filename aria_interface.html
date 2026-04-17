@@ -420,7 +420,7 @@
     </div>
     <div class="drow" id="drow-pressao">
       <span class="dname">💧 Pressão</span>
-      <span class="dval off" id="dpressao">--%</span>
+      <span class="dval off" id="dpressao">-- kPa</span>
     </div>
 
     <!-- SISTEMA -->
@@ -634,9 +634,9 @@ function updateAll(data) {
 
   // ── PRESSÃO ──
   if(data.pressao !== undefined) {
-    const p = parseInt(data.pressao);
+    const p = parseFloat(data.pressao);
     const cls = p < 30 ? 'warn' : '';
-    setDval('dpressao', p + '%', cls || (p <= 0 ? 'off' : ''));
+    setDval('dpressao', p.toFixed(0) + ' kPa', cls || (p <= 0 ? 'off' : ''));
     setDrow('drow-pressao', p >= 30, cls || null);
   }
 

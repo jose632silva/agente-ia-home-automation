@@ -149,7 +149,9 @@ def ler_sensores(sensor: str = "todos") -> str:
         return f"Fogo: {'DETECTADO' if f != 'normal' else 'não detectado'}"
 
     def fmt_pressao():
-        return f"Pressão: {c.get('pressao', 0)}%"
+        p = c.get('pressao', 0)
+        nivel = "baixa" if p < 30 else ("normal" if p < 80 else "alta")
+        return f"Pressão: {p} kPa ({nivel})"
 
     def fmt_estado():
         return f"Estado do sistema: {c.get('estado', 'NORMAL')}"

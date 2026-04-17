@@ -1,55 +1,134 @@
 """
-servidor.py — API que o frontend ARIA consome, agora usando o agente Agno real.
+servidor.py — API Flask para o frontend ARIA.
+  • Assina jrsilva/telemetria e mantém sensor_cache atualizado em tempo real.
+  • Expõe /api/comando (agente IA) e /api/status (leitura do ESP32).
 """
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import json
+import threading
 import traceback
 
-# ─────────────────────────────────────────────────────────────────────────
-# Importa o agente do arquivo vizinho
-# ─────────────────────────────────────────────────────────────────────────
-from agente_ia import agente_casa   # ← aqui está a mágica
+import paho.mqtt.client as mqtt
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 
+from agente_ia import agente_casa, sensor_cache   # compartilha o cache
+
+# ─────────────────────────────────────────────────────────────────────────
+# CONFIGURAÇÕES
+# ─────────────────────────────────────────────────────────────────────────
+MQTT_BROKER   = "broker.emqx.io"
+MQTT_PORT     = 1883
+TOPIC_TEL     = "jrsilva/telemetria"   # tópico publicado pelo ESP32
+RECONNECT_SEC = 5
+
+# ─────────────────────────────────────────────────────────────────────────
+# SUBSCRIBER MQTT — roda em thread separada
+# ─────────────────────────────────────────────────────────────────────────
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print(f"[MQTT] Conectado ao broker ({MQTT_BROKER})")
+        client.subscribe(TOPIC_TEL)
+        sensor_cache["mqtt"] = True
+    else:
+        print(f"[MQTT] Falha de conexão rc={rc}")
+        sensor_cache["mqtt"] = False
+
+def on_disconnect(client, userdata, rc):
+    print(f"[MQTT] Desconectado rc={rc} — reconectando em {RECONNECT_SEC}s")
+    sensor_cache["mqtt"] = False
+
+def on_message(client, userdata, msg):
+    """Atualiza sensor_cache com cada payload de telemetria do ESP32."""
+    try:
+        data = json.loads(msg.payload.decode("utf-8"))
+        # Campos enviados pelo ESP32:
+        # fumaca, fogo, temperatura, pressao, estado,
+        # sirene, bomba, led, servo
+        for key in ("fumaca", "fogo", "temperatura", "pressao",
+                    "estado", "sirene", "bomba", "led", "servo"):
+            if key in data:
+                sensor_cache[key] = data[key]
+        sensor_cache["mqtt"] = True
+    except Exception as e:
+        print(f"[MQTT] Erro ao parsear telemetria: {e}")
+
+def start_mqtt_subscriber():
+    """Loop de subscriber MQTT com reconexão automática."""
+    client = mqtt.Client(client_id="ARIA_Server_Sub", clean_session=True)
+    client.on_connect    = on_connect
+    client.on_disconnect = on_disconnect
+    client.on_message    = on_message
+
+    while True:
+        try:
+            client.connect(MQTT_BROKER, MQTT_PORT, keepalive=60)
+            client.loop_forever()           # bloqueia até desconectar
+        except Exception as e:
+            print(f"[MQTT] Exceção: {e} — retry em {RECONNECT_SEC}s")
+            sensor_cache["mqtt"] = False
+            import time; time.sleep(RECONNECT_SEC)
+
+# Inicia subscriber em thread daemon
+threading.Thread(target=start_mqtt_subscriber, daemon=True, name="mqtt-sub").start()
+
+# ─────────────────────────────────────────────────────────────────────────
+# FLASK
+# ─────────────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app)   # libera acesso do frontend
+CORS(app)
 
-# ─────────────────────────────────────────────────────────────────────────
-# Endpoint principal – recebe mensagem, chama o agente e retorna a resposta
-# ─────────────────────────────────────────────────────────────────────────
+# ── /api/comando ──────────────────────────────────────────────────────────
 @app.route("/api/comando", methods=["POST"])
 def comando():
-    data = request.get_json(force=True)
+    data     = request.get_json(force=True)
     mensagem = data.get("mensagem", "").strip()
-
     if not mensagem:
         return jsonify({"resposta": "Mensagem vazia."}), 400
-
     try:
-        # Executa o agente Agno com a mensagem do usuário
-        resposta = agente_casa.run(mensagem)
-        # O objeto resposta tem .content (a string da resposta)
-        texto_resposta = resposta.content
+        resposta        = agente_casa.run(mensagem)
+        texto_resposta  = resposta.content
         return jsonify({"resposta": texto_resposta})
     except Exception as e:
         traceback.print_exc()
-        return jsonify({"resposta": f"Erro no agente: {str(e)}"}), 500
+        return jsonify({"resposta": f"Erro no agente: {e}"}), 500
 
-# ─────────────────────────────────────────────────────────────────────────
-# Health check (opcional)
-# ─────────────────────────────────────────────────────────────────────────
+# ── /api/status ───────────────────────────────────────────────────────────
+@app.route("/api/status", methods=["GET"])
+def status():
+    """
+    Retorna o estado atual dos sensores e atuadores.
+    Resposta exemplo:
+    {
+      "led": "on", "servo": 90,
+      "temperatura": 25.3, "fumaca": 45, "fogo": "normal",
+      "pressao": 80, "estado": "NORMAL",
+      "sirene": 0, "bomba": "Desligado",
+      "mqtt": true
+    }
+    """
+    return jsonify(dict(sensor_cache))
+
+# ── /health ───────────────────────────────────────────────────────────────
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "servico": "ARIA Backend com Agno"}), 200
+    return jsonify({
+        "status":  "ok",
+        "servico": "ARIA Backend",
+        "mqtt":    sensor_cache.get("mqtt", False),
+    }), 200
 
-from flask import send_from_directory
-
-@app.route('/')
+# ── Serve o frontend ──────────────────────────────────────────────────────
+@app.route("/")
 def index():
-    return send_from_directory('.', 'aria_interface.html')
+    return send_from_directory(".", "aria_interface.html")
 
+# ─────────────────────────────────────────────────────────────────────────
+# MAIN
+# ─────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("╔══════════════════════════════════════╗")
-    print("║   ARIA — Servidor com Agno v2.0      ║")
-    print("║   API: http://localhost:5000         ║")
-    print("╚══════════════════════════════════════╝")
+    print("╔══════════════════════════════════════════╗")
+    print("║   ARIA — Servidor v3.0 (sensores)        ║")
+    print("║   API:  http://localhost:5000            ║")
+    print("║   Sub:  jrsilva/telemetria               ║")
+    print("╚══════════════════════════════════════════╝")
     app.run(host="0.0.0.0", port=5000, debug=False)

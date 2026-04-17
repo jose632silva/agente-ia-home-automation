@@ -135,25 +135,48 @@
     .sbadge.speaking  { border-color: var(--purple); color: var(--purple); }
     .sdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-    /* Painel de sensores (novo) */
-    .sensors-panel {
+    /* NOVO: Painel de sensores */
+    .sensor-panel {
+      margin-top: 16px;
       width: 100%;
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .sensor-row {
       background: rgba(0,0,0,.2);
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 5px 10px;
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+    .sensor-title {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--teal);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .sensor-item {
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
+      align-items: baseline;
+      font-size: 10px;
+      border-bottom: 1px dashed rgba(0,224,200,.15);
+      padding: 4px 0;
     }
-    .sensor-name { color: var(--muted); letter-spacing: 1px; }
-    .sensor-value { font-family: 'Orbitron', sans-serif; color: var(--teal); }
+    .sensor-label {
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+    .sensor-value {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--teal);
+      font-weight: 600;
+    }
+    .sensor-value.na {
+      color: var(--muted);
+      font-style: italic;
+    }
 
     .devices {
       margin-top: 10px; width: 100%;
@@ -211,7 +234,6 @@
       flex-shrink: 0;
       position: relative;
       overflow-x: auto;
-      overflow-y: hidden;
     }
     .char-strip::before {
       content: '';
@@ -243,6 +265,7 @@
     .strip-badge.speaking  { border-color: var(--purple); color: var(--purple); }
     .strip-devices {
       display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+      margin-top: 5px;
     }
     .strip-dev {
       font-family: 'Orbitron', sans-serif; font-size: 8px;
@@ -253,21 +276,6 @@
       transition: all .3s;
     }
     .strip-dev.on { border-color: rgba(0,224,200,.35); color: var(--teal); }
-    /* sensores no mobile */
-    .strip-sensors {
-      display: flex;
-      gap: 8px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-    .strip-sensor {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 8px;
-      background: rgba(0,0,0,.2);
-      padding: 2px 6px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
 
     /* ─── CHAT ─── */
     .chat {
@@ -367,14 +375,10 @@
     }
     .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ═══════════════════════
-       RESPONSIVE — MOBILE
-    ═══════════════════════ */
+    /* Responsivo mobile */
     @media (max-width: 680px) {
       .cpanel       { display: none !important; }
-      .char-strip   { display: flex !important; flex-direction: column; align-items: stretch; gap: 8px; }
-      .strip-info   { display: flex; flex-direction: column; }
-      .strip-avatar { width: 60px; height: 96px; }
+      .char-strip   { display: flex !important; }
       .main         { flex-direction: column; }
       .msg          { max-width: 96%; }
       .mbub         { font-size: 12.5px; }
@@ -395,89 +399,122 @@
   <div class="hdr-dot"></div>
 </header>
 
-<!-- ═══════════ MOBILE CHARACTER STRIP ═══════════ -->
+<!-- MOBILE CHARACTER STRIP (agora com sensores) -->
 <div class="char-strip" id="charStrip">
-  <div style="display: flex; gap: 12px; align-items: center;">
-    <svg class="strip-avatar" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="sg_m" cx="48%" cy="36%" r="64%">
-          <stop offset="0%" stop-color="#fde8c8"/>
-          <stop offset="100%" stop-color="#f0b888"/>
-        </radialGradient>
-        <radialGradient id="ig_m" cx="30%" cy="25%" r="78%">
-          <stop offset="0%" stop-color="#00f5e0"/>
-          <stop offset="60%" stop-color="#00b8d4"/>
-          <stop offset="100%" stop-color="#006890"/>
-        </radialGradient>
-        <radialGradient id="hg_m" cx="40%" cy="20%" r="70%">
-          <stop offset="0%" stop-color="#1a0a38"/>
-          <stop offset="100%" stop-color="#08021a"/>
-        </radialGradient>
-        <linearGradient id="fadeB_m" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/>
-          <stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/>
-        </linearGradient>
-      </defs>
-      <!-- back hair, torso, etc (versão simplificada) -->
-      <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg_m)"/>
-      <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
-      <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
-      <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
-      <rect x="34" y="219" width="172" height="66" fill="#0e1535"/>
-      <path d="M 94 204 L 120 228 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
-      <line x1="120" y1="228" x2="120" y2="285" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
-      <rect x="97" y="237" width="46" height="30" rx="4" fill="rgba(0,224,200,.05)" stroke="rgba(0,224,200,.22)" stroke-width=".9"/>
-      <circle cx="135" cy="253" r="2.5" fill="#00e8d0"><animate attributeName="opacity" values=".2;.9;.2" dur="2.2s" repeatCount="indefinite"/></circle>
-      <rect x="34" y="265" width="172" height="20" fill="url(#fadeB_m)"/>
-      <rect x="104" y="185" width="32" height="22" rx="4" fill="url(#sg_m)"/>
-      <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg_m)"/>
-      <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
-      <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
-      <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
-      <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
-      <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
-      <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
-      <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
-      <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-      <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-      <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
-      <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
-      <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
-      <ellipse id="lidL_m" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-      <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
-      <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
-      <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
-      <ellipse id="lidR_m" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
-      <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-      <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-      <g id="mc_m"><path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060"/><path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080"/></g>
-      <g id="mo_m" style="opacity:0"><path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/><rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/></g>
-      <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75"/>
-    </svg>
-    <div class="strip-info">
-      <div class="strip-name">ARIA</div>
-      <div class="strip-status">MODELO v2.4 · ONLINE</div>
-      <div class="strip-badge" id="stripBadge"><div class="sdot"></div><span id="stripTxt">AGUARDANDO</span></div>
-      <div class="strip-devices" style="margin-top:5px">
-        <div class="strip-dev" id="sdluz">LUZ: OFF</div>
-        <div class="strip-dev" id="sdservo">SERVO: 0°</div>
-      </div>
-      <div class="strip-sensors" id="stripSensors"></div>
+  <svg class="strip-avatar" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="sg_m" cx="48%" cy="36%" r="64%">
+        <stop offset="0%" stop-color="#fde8c8"/>
+        <stop offset="100%" stop-color="#f0b888"/>
+      </radialGradient>
+      <radialGradient id="ig_m" cx="30%" cy="25%" r="78%">
+        <stop offset="0%" stop-color="#00f5e0"/>
+        <stop offset="60%" stop-color="#00b8d4"/>
+        <stop offset="100%" stop-color="#006890"/>
+      </radialGradient>
+      <radialGradient id="hg_m" cx="40%" cy="20%" r="70%">
+        <stop offset="0%" stop-color="#1a0a38"/>
+        <stop offset="100%" stop-color="#08021a"/>
+      </radialGradient>
+      <linearGradient id="fadeB_m" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+    <!-- Back hair -->
+    <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg_m)"/>
+    <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
+    <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
+    <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
+    <rect x="34" y="219" width="172" height="66" fill="#0e1535"/>
+    <path d="M 94 204 L 120 228 L 146 204" fill="none" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
+    <line x1="120" y1="228" x2="120" y2="285" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
+    <rect x="97" y="237" width="46" height="30" rx="4" fill="rgba(0,224,200,.05)" stroke="rgba(0,224,200,.22)" stroke-width=".9"/>
+    <line x1="103" y1="244" x2="137" y2="244" stroke="rgba(0,224,200,.55)" stroke-width=".9"/>
+    <line x1="103" y1="249" x2="131" y2="249" stroke="rgba(0,224,200,.3)" stroke-width=".8"/>
+    <line x1="103" y1="254" x2="125" y2="254" stroke="rgba(0,224,200,.18)" stroke-width=".8"/>
+    <circle cx="135" cy="253" r="4" fill="none" stroke="rgba(0,224,200,.38)" stroke-width=".8"/>
+    <circle cx="135" cy="253" r="2" fill="#00f0dc">
+      <animate attributeName="opacity" values=".2;.9;.2" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <line x1="50" y1="222" x2="44" y2="285" stroke="rgba(0,224,200,.07)" stroke-width="1.2"/>
+    <line x1="190" y1="222" x2="196" y2="285" stroke="rgba(0,224,200,.07)" stroke-width="1.2"/>
+    <rect x="34" y="265" width="172" height="20" fill="url(#fadeB_m)"/>
+    <rect x="104" y="185" width="32" height="22" rx="4" fill="url(#sg_m)"/>
+    <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg_m)"/>
+    <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
+    <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg_m)"/>
+    <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+    <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+    <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+    <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+    <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
+    <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
+    <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
+    <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
+    <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
+    <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
+    <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
+    <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+    <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
+    <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <ellipse id="lidL_m" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+    <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
+    <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
+    <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig_m)"/>
+    <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+    <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
+    <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+    <ellipse id="lidR_m" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+    <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+    <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+    <g id="mc_m">
+      <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
+      <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
+      <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
+    </g>
+    <g id="mo_m" style="opacity:0">
+      <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
+      <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
+      <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
+      <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
+    </g>
+    <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
+    <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.1)"/>
+    <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
+    <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
+      <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
+  </svg>
+  <div class="strip-info">
+    <div class="strip-name">ARIA</div>
+    <div class="strip-status">MODELO v2.4 · ONLINE</div>
+    <div class="strip-badge" id="stripBadge"><div class="sdot"></div><span id="stripTxt">AGUARDANDO</span></div>
+    <div class="strip-devices" style="margin-top:5px">
+      <div class="strip-dev" id="sdluz">LUZ: OFF</div>
+      <div class="strip-dev" id="sdservo">SERVO: 0°</div>
+      <!-- Sensores no mobile -->
+      <div class="strip-dev" id="sdtemp">🌡️ --°C</div>
+      <div class="strip-dev" id="sdfumaca">💨 --ppm</div>
+      <div class="strip-dev" id="sdpres">📊 --%</div>
+      <div class="strip-dev" id="sdfogo">🔥 --</div>
     </div>
-    <div style="flex-shrink:0">
-      <div class="api-cfg" style="width:110px">
-        <div class="api-lbl">VOZ</div>
-        <select id="voiceSelectM" style="font-size:9px; padding:4px 6px">
-          <option value="">Carregando...</option>
-        </select>
-      </div>
+  </div>
+  <div style="flex-shrink:0">
+    <div class="api-cfg" style="width:110px">
+      <div class="api-lbl">VOZ</div>
+      <select id="voiceSelectM" style="font-size:9px; padding:4px 6px">
+        <option value="">Carregando...</option>
+      </select>
     </div>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- ═══════════ DESKTOP CHARACTER PANEL ═══════════ -->
+  <!-- DESKTOP CHARACTER PANEL (com sensores) -->
   <div class="cpanel">
     <div class="cname">ARIA</div>
     <div class="ctitle">MODELO v2.4 · ONLINE</div>
@@ -485,42 +522,121 @@
     <div class="cwrap">
       <div class="glow-ring" id="glowRing"></div>
       <svg class="char-svg" viewBox="30 5 180 290" xmlns="http://www.w3.org/2000/svg">
+        <!-- mesmo SVG desktop original, omitido por brevidade - manter idêntico ao original -->
         <defs>
-          <radialGradient id="sg" cx="48%" cy="36%" r="64%"><stop offset="0%" stop-color="#fde8c8"/><stop offset="100%" stop-color="#f0b888"/></radialGradient>
-          <radialGradient id="ig" cx="30%" cy="25%" r="78%"><stop offset="0%" stop-color="#00f5e0"/><stop offset="60%" stop-color="#00b8d4"/><stop offset="100%" stop-color="#006890"/></radialGradient>
-          <radialGradient id="hg" cx="40%" cy="20%" r="70%"><stop offset="0%" stop-color="#1a0a38"/><stop offset="100%" stop-color="#08021a"/></radialGradient>
-          <linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/><stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/></linearGradient>
+          <radialGradient id="sg" cx="48%" cy="36%" r="64%">
+            <stop offset="0%" stop-color="#fde8c8"/>
+            <stop offset="100%" stop-color="#f0b888"/>
+          </radialGradient>
+          <radialGradient id="ig" cx="30%" cy="25%" r="78%">
+            <stop offset="0%" stop-color="#00f5e0"/>
+            <stop offset="60%" stop-color="#00b8d4"/>
+            <stop offset="100%" stop-color="#006890"/>
+          </radialGradient>
+          <radialGradient id="hg" cx="40%" cy="20%" r="70%">
+            <stop offset="0%" stop-color="#1a0a38"/>
+            <stop offset="100%" stop-color="#08021a"/>
+          </radialGradient>
+          <linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0b0b22" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#0b0b22" stop-opacity="1"/>
+          </linearGradient>
         </defs>
         <path d="M 62 118 Q 52 88 56 58 Q 64 18 120 6 Q 176 18 184 58 Q 188 88 178 118 Q 172 148 168 175 Q 158 200 148 210 L 92 210 Q 82 200 72 175 Q 68 148 62 118 Z" fill="url(#hg)"/>
         <path d="M 62 118 Q 50 136 44 162 Q 40 182 46 198 Q 52 208 58 204 Q 64 192 65 175 Q 66 158 66 142 Z" fill="#0d0520"/>
         <path d="M 178 118 Q 190 136 196 162 Q 200 182 194 198 Q 188 208 182 204 Q 176 192 175 175 Q 174 158 174 142 Z" fill="#0d0520"/>
         <path d="M 58 205 Q 38 210 34 220 L 206 220 Q 202 210 182 205 Q 164 198 120 196 Q 76 198 58 205 Z" fill="#0e1535"/>
         <rect x="34" y="219" width="172" height="71" fill="#0e1535"/>
+        <path d="M 34 220 Q 60 232 90 238 L 90 290 L 34 290 Z" fill="#0d1232" opacity=".5"/>
+        <path d="M 206 220 Q 180 232 150 238 L 150 290 L 206 290 Z" fill="#0d1232" opacity=".5"/>
         <path d="M 93 204 L 120 230 L 147 204" fill="rgba(0,224,200,.04)" stroke="#00e0c8" stroke-width="1.8" stroke-linejoin="round"/>
         <line x1="120" y1="230" x2="120" y2="290" stroke="rgba(0,224,200,.09)" stroke-width="1"/>
+        <line x1="60" y1="238" x2="91" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
+        <line x1="149" y1="238" x2="180" y2="238" stroke="rgba(0,224,200,.08)" stroke-width=".8"/>
         <rect x="96" y="240" width="48" height="32" rx="4.5" fill="rgba(0,224,200,.04)" stroke="rgba(0,224,200,.24)" stroke-width=".9"/>
         <line x1="103" y1="248" x2="138" y2="248" stroke="rgba(0,224,200,.6)" stroke-width=".9"/>
         <line x1="103" y1="253" x2="132" y2="253" stroke="rgba(0,224,200,.32)" stroke-width=".8"/>
-        <circle cx="136" cy="256" r="2.5" fill="#00e8d0"><animate attributeName="opacity" values=".15;.9;.15" dur="2.2s" repeatCount="indefinite"/></circle>
+        <line x1="103" y1="258" x2="126" y2="258" stroke="rgba(0,224,200,.18)" stroke-width=".8"/>
+        <circle cx="136" cy="256" r="5" fill="none" stroke="rgba(0,224,200,.35)" stroke-width=".9"/>
+        <circle cx="136" cy="256" r="2.5" fill="#00e8d0">
+          <animate attributeName="opacity" values=".15;.9;.15" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
         <line x1="50" y1="224" x2="43" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
         <line x1="190" y1="224" x2="197" y2="290" stroke="rgba(0,224,200,.07)" stroke-width="1.3"/>
         <rect x="34" y="268" width="172" height="22" fill="url(#fadeB)"/>
         <rect x="104" y="185" width="32" height="24" rx="4" fill="url(#sg)"/>
+        <rect x="104" y="198" width="32" height="11" rx="0" fill="rgba(0,0,0,.08)"/>
         <ellipse cx="120" cy="116" rx="66" ry="80" fill="url(#sg)"/>
-        <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)"/><ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
-        <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/><circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+        <ellipse cx="54" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+        <ellipse cx="186" cy="116" rx="9" ry="13" fill="url(#sg)"/>
+        <ellipse cx="54" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+        <ellipse cx="186" cy="116" rx="5.5" ry="8" fill="rgba(175,95,72,.14)"/>
+        <circle cx="54" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+        <circle cx="186" cy="128" r="3.5" fill="#00e0c8" opacity=".88"/>
+        <circle cx="54" cy="128" r="1.6" fill="white" opacity=".55"/>
+        <circle cx="186" cy="128" r="1.6" fill="white" opacity=".55"/>
         <path d="M 56 102 Q 54 68 65 46 Q 76 28 96 24 Q 90 46 87 68 Q 84 88 80 104 Z" fill="#0d0520"/>
         <path d="M 96 24 Q 120 14 144 24 Q 137 46 129 64 Q 123 78 120 90 Q 117 78 111 64 Q 103 46 96 24 Z" fill="#0d0520"/>
         <path d="M 144 24 Q 164 28 175 46 Q 186 68 184 102 L 160 104 Q 156 88 153 68 Q 150 46 144 24 Z" fill="#0d0520"/>
+        <path d="M 61 82 Q 59 98 60 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+        <path d="M 68 52 Q 66 70 67 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
+        <path d="M 179 82 Q 181 98 180 118" fill="none" stroke="#4a1878" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+        <path d="M 172 52 Q 174 70 173 90"  fill="none" stroke="#009888" stroke-width="1.8" stroke-linecap="round" opacity=".4"/>
         <path d="M 80 84 Q 94 77 110 81" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
         <path d="M 130 81 Q 146 77 160 84" fill="none" stroke="#18082e" stroke-width="2.6" stroke-linecap="round"/>
-        <g id="eyeL"><ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/><ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)"/><ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/><ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/></g>
-        <g id="eyeR"><ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/><ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)"/><ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/><ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/></g>
-        <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/><circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
-        <g id="mc"><path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060"/><path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080"/></g>
-        <g id="mo" style="opacity:0"><path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/><rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/></g>
-        <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/><ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
-        <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75"/>
+        <g id="eyeL">
+          <ellipse cx="95" cy="104" rx="19" ry="16" fill="white"/>
+          <path d="M 76 104 Q 95 91 114 104" fill="#fde8c8"/>
+          <ellipse cx="95" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+          <ellipse cx="95" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+          <circle cx="100" cy="100" r="3.2" fill="white" opacity=".92"/>
+          <circle cx="90" cy="110" r="1.6" fill="white" opacity=".42"/>
+          <ellipse id="lidL" cx="95" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+          <path d="M 76 104 Q 95 91 114 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+          <line x1="80" y1="97" x2="77" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="87" y1="92" x2="86" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="95" y1="91" x2="95" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="103" y1="92" x2="104" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="110" y1="97" x2="112" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M 78 109 Q 95 117 112 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
+        <g id="eyeR">
+          <ellipse cx="145" cy="104" rx="19" ry="16" fill="white"/>
+          <path d="M 126 104 Q 145 91 164 104" fill="#fde8c8"/>
+          <ellipse cx="145" cy="106" rx="13" ry="13" fill="url(#ig)"/>
+          <ellipse cx="145" cy="107" rx="7.5" ry="7.5" fill="#04040e"/>
+          <circle cx="150" cy="100" r="3.2" fill="white" opacity=".92"/>
+          <circle cx="140" cy="110" r="1.6" fill="white" opacity=".42"/>
+          <ellipse id="lidR" cx="145" cy="104" rx="19" ry="16" fill="#fde8c8" opacity="0"/>
+          <path d="M 126 104 Q 145 91 164 104" fill="none" stroke="#16082c" stroke-width="2.3" stroke-linecap="round"/>
+          <line x1="130" y1="97" x2="127" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="137" y1="92" x2="136" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="145" y1="91" x2="145" y2="83" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="153" y1="92" x2="154" y2="85" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="160" y1="97" x2="162" y2="90" stroke="#16082c" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M 128 109 Q 145 117 162 109" fill="none" stroke="#16082c" stroke-width="1.1" stroke-linecap="round"/>
+        </g>
+        <circle cx="115" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+        <circle cx="125" cy="134" r="2.2" fill="rgba(160,88,58,.2)"/>
+        <path d="M 115 134 Q 120 138 125 134" fill="none" stroke="rgba(160,88,58,.15)" stroke-width="1"/>
+        <g id="mc">
+          <path d="M 105 150 Q 112 145 120 148 Q 128 145 135 150" fill="#c86060" stroke="none"/>
+          <path d="M 105 150 Q 120 161 135 150 Q 128 156 120 158 Q 112 156 105 150 Z" fill="#de8080" stroke="none"/>
+          <path d="M 105 150 Q 120 157 135 150" fill="none" stroke="#b04848" stroke-width=".7"/>
+        </g>
+        <g id="mo" style="opacity:0">
+          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149 Q 132 163 120 167 Q 108 163 106 149 Z" fill="#9a2828"/>
+          <rect x="109" y="151" width="22" height="7" rx="1.5" fill="white"/>
+          <path d="M 106 149 Q 113 143 120 146 Q 127 143 134 149" fill="#c86060"/>
+          <ellipse cx="120" cy="162" rx="9" ry="4" fill="#e06080" opacity=".5"/>
+        </g>
+        <ellipse cx="77" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
+        <ellipse cx="163" cy="122" rx="14" ry="7" fill="rgba(255,135,110,.10)"/>
+        <rect x="46" y="106" width="10" height="18" rx="3.5" fill="#0e1535" stroke="#00e0c8" stroke-width=".75" opacity=".85"/>
+        <circle cx="51" cy="115" r="2.8" fill="#00e0c8" opacity=".4">
+          <animate attributeName="opacity" values=".15;.75;.15" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="51" cy="115" r="1.2" fill="#00f0dc" opacity=".9"/>
       </svg>
     </div><!-- cwrap -->
 
@@ -530,14 +646,14 @@
     </div>
 
     <!-- NOVO: Painel de sensores (desktop) -->
-    <div class="sensors-panel" id="sensorsPanel">
-      <div class="sensor-row"><span class="sensor-name">🌡️ Temperatura</span><span class="sensor-value" id="tempVal">-- °C</span></div>
-      <div class="sensor-row"><span class="sensor-name">💨 Fumaça (PPM)</span><span class="sensor-value" id="fumacaVal">--</span></div>
-      <div class="sensor-row"><span class="sensor-name">🔥 Fogo</span><span class="sensor-value" id="fogoVal">--</span></div>
-      <div class="sensor-row"><span class="sensor-name">⚙️ Pressão (%)</span><span class="sensor-value" id="pressaoVal">--</span></div>
-      <div class="sensor-row"><span class="sensor-name">🔊 Sirene</span><span class="sensor-value" id="sireneVal">--</span></div>
-      <div class="sensor-row"><span class="sensor-name">💧 Bomba</span><span class="sensor-value" id="bombaVal">--</span></div>
-      <div class="sensor-row"><span class="sensor-name">📊 Estado</span><span class="sensor-value" id="estadoVal">--</span></div>
+    <div class="sensor-panel">
+      <div class="sensor-title">📡 LEITURAS ATUAIS</div>
+      <div class="sensor-grid">
+        <div class="sensor-item"><span class="sensor-label">🌡️ Temperatura</span><span class="sensor-value" id="tempVal">--°C</span></div>
+        <div class="sensor-item"><span class="sensor-label">💨 Fumaça</span><span class="sensor-value" id="fumacaVal">-- ppm</span></div>
+        <div class="sensor-item"><span class="sensor-label">📊 Pressão</span><span class="sensor-value" id="pressaoVal">--%</span></div>
+        <div class="sensor-item"><span class="sensor-label">🔥 Fogo</span><span class="sensor-value" id="fogoVal">--</span></div>
+      </div>
     </div>
 
     <div class="devices">
@@ -562,19 +678,21 @@
     <div class="api-cfg">
       <div class="api-lbl">SELECIONE A VOZ</div>
       <div class="voice-wrap">
-        <select id="voiceSelect" style="flex:1"><option value="">Carregando vozes...</option></select>
+        <select id="voiceSelect" style="flex:1">
+          <option value="">Carregando vozes...</option>
+        </select>
         <button class="voice-refresh" id="voiceRefresh" title="Recarregar vozes">↻</button>
       </div>
     </div>
   </div><!-- cpanel -->
 
-  <!-- ═══════════ CHAT ═══════════ -->
+  <!-- CHAT -->
   <div class="chat">
     <div class="msgs" id="msgs">
       <div class="msg assistant">
         <div class="mav">AI</div>
         <div>
-          <div class="mbub">Olá! Sou a <strong>ARIA</strong>. Posso controlar a luz e o servo, e também te informar os valores dos sensores. Pergunte: <em>"qual a temperatura?"</em> ou <em>"mostre os sensores"</em>.</div>
+          <div class="mbub">Olá! Sou a <strong>ARIA</strong>. Posso controlar a luz e o servo, e também responder perguntas sobre os sensores: <em>"qual a temperatura?"</em>, <em>"fumaça"</em>, <em>"pressão"</em> ou <em>"status do fogo"</em>.</div>
           <div class="mtime">agora</div>
         </div>
       </div>
@@ -596,7 +714,7 @@
         </svg>
       </button>
       <div class="iwrap">
-        <textarea class="tinput" id="tinput" placeholder="Digite um comando... (ex: qual a temperatura?)" rows="1"></textarea>
+        <textarea class="tinput" id="tinput" placeholder="Digite um comando ou pergunta... (ex: qual a temperatura?)" rows="1"></textarea>
       </div>
       <button class="sbtn" id="sbtn">ENVIAR</button>
     </div>
@@ -608,10 +726,10 @@
 
 <script>
 /* ═══════════════════════════════════════════
-   CONFIGURAÇÕES E ESTADO GLOBAL
+   ARIA - Assistente com leitura de sensores
 ═══════════════════════════════════════════ */
-const getUrl = () => document.getElementById('apiUrl').value;
-const STATUS_URL = '/api/status';   // endpoint que o ESP32 deve fornecer
+const getUrl = () => '/api/comando';
+const STATUS_URL = '/api/status';
 const STATUS_INTERVAL = 4000;
 
 let wantListening = false;
@@ -621,49 +739,41 @@ let currentVoice  = null;
 let speakTimer    = null;
 let blinkTimer    = null;
 
-// Armazena o último status lido do ESP32
-let lastStatus = {
+// Armazenar últimos valores dos sensores
+let lastSensors = {
   temperatura: null,
   fumaca: null,
-  fogo: null,
   pressao: null,
-  sirene: null,
-  bomba: null,
-  estado: null,
-  led: null,
-  servo: null,
-  mqtt: true
+  fogo: null
 };
 
-/* ═══════════════════════════════════════════
-   HELPER — animações da personagem
-═══════════════════════════════════════════ */
 function svgEl(...ids) { return ids.map(id => document.getElementById(id)).filter(Boolean); }
-function svgOpacity(ids, val) { ids.forEach(id => { const el = document.getElementById(id); if (el) el.style.opacity = val; }); }
-function svgAttr(ids, attr, val) { ids.forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); }); }
+function svgOpacity(ids, val) { ids.forEach(id => { const el = document.getElementById(id); if(el) el.style.opacity = val; }); }
+function svgAttr(ids, attr, val) { ids.forEach(id => { const el = document.getElementById(id); if(el) el.setAttribute(attr, val); }); }
 
+/* ESTADOS DA PERSONAGEM */
 function setState(s) {
   const badge = document.getElementById('sbadge');
   const stxt  = document.getElementById('stxt');
   const ring  = document.getElementById('glowRing');
   const sbM   = document.getElementById('stripBadge');
   const stM   = document.getElementById('stripTxt');
-  if (!badge) return;
-  badge.className = 'sbadge';
-  if (sbM) sbM.className = 'strip-badge';
-  ring.classList.remove('on');
+
+  if(badge) badge.className = 'sbadge';
+  if(sbM) sbM.className = 'strip-badge';
+  if(ring) ring.classList.remove('on');
+
   const map = { idle: ['AGUARDANDO', ''], listening: ['OUVINDO...', 'listening'], thinking: ['PROCESSANDO',''], speaking: ['RESPONDENDO','speaking'] };
   const [txt, cls] = map[s] || map.idle;
-  stxt.textContent = txt;
-  if (stM) stM.textContent = txt;
-  if (cls) { badge.classList.add(cls); if (sbM) sbM.classList.add(cls); }
-  if (s === 'listening') ring.classList.add('on');
-  if (s === 'speaking') startSpeak(); else stopSpeak();
+  if(stxt) stxt.textContent = txt;
+  if(stM) stM.textContent = txt;
+  if(cls) { if(badge) badge.classList.add(cls); if(sbM) sbM.classList.add(cls); }
+  if(s === 'listening' && ring) ring.classList.add('on');
+  if(s === 'speaking') startSpeak(); else stopSpeak();
 }
 
 function startSpeak() {
   let o = false;
-  if (speakTimer) clearInterval(speakTimer);
   speakTimer = setInterval(() => {
     o = !o;
     svgOpacity(['mo', 'mo_m'], o ? '1' : '0');
@@ -671,10 +781,11 @@ function startSpeak() {
   }, 110 + Math.random() * 80);
 }
 function stopSpeak() {
-  if (speakTimer) { clearInterval(speakTimer); speakTimer = null; }
+  if(speakTimer) { clearInterval(speakTimer); speakTimer = null; }
   svgOpacity(['mo', 'mo_m'], '0');
   svgOpacity(['mc', 'mc_m'], '1');
 }
+
 function blink() {
   svgAttr(['lidL', 'lidL_m'], 'opacity', '1');
   svgAttr(['lidR', 'lidR_m'], 'opacity', '1');
@@ -688,165 +799,132 @@ function scheduleBlink() {
 }
 scheduleBlink();
 
-/* ═══════════════════════════════════════════
-   ATUALIZAÇÃO DA UI (LED, SERVO, SENSORES)
-═══════════════════════════════════════════ */
-function updateDevices(cmd, param) {
-  if (cmd === 'led_on') {
-    document.getElementById('dluz').textContent = 'LIGADA';
-    document.getElementById('dluz').className = 'dval';
-    document.getElementById('sdluz').textContent = 'LUZ: ON';
-    document.getElementById('sdluz').className = 'strip-dev on';
-    const row = document.getElementById('drow-luz');
-    if (row) row.classList.add('active');
-    lastStatus.led = 'on';
-  } else if (cmd === 'led_off') {
-    document.getElementById('dluz').textContent = 'DESLIGADA';
-    document.getElementById('dluz').className = 'dval off';
-    document.getElementById('sdluz').textContent = 'LUZ: OFF';
-    document.getElementById('sdluz').className = 'strip-dev';
-    if (document.getElementById('drow-luz')) document.getElementById('drow-luz').classList.remove('active');
-    lastStatus.led = 'off';
-  } else if (cmd === 'servo_angle' && param !== null) {
-    const a = param + '°';
-    document.getElementById('dservo').textContent = a;
-    document.getElementById('dservo').className = param > 0 ? 'dval' : 'dval off';
-    document.getElementById('sdservo').textContent = 'SERVO: ' + a;
-    document.getElementById('sdservo').className = 'strip-dev' + (param > 0 ? ' on' : '');
-    const row = document.getElementById('drow-servo');
-    if (row) row.classList.toggle('active', param > 0);
-    lastStatus.servo = param;
-  }
+/* ATUALIZA UI DOS SENSORES */
+function updateSensorUI() {
+  const tempC = lastSensors.temperatura !== null ? lastSensors.temperatura.toFixed(1) + '°C' : '--°C';
+  const fum = lastSensors.fumaca !== null ? Math.round(lastSensors.fumaca) + ' ppm' : '-- ppm';
+  const pres = lastSensors.pressao !== null ? Math.round(lastSensors.pressao) + '%' : '--%';
+  let fogoStr = lastSensors.fogo !== null ? (lastSensors.fogo ? 'DETECTADO' : 'normal') : '--';
+
+  // Desktop
+  const tempEl = document.getElementById('tempVal');
+  if(tempEl) tempEl.textContent = tempC;
+  const fumEl = document.getElementById('fumacaVal');
+  if(fumEl) fumEl.textContent = fum;
+  const presEl = document.getElementById('pressaoVal');
+  if(presEl) presEl.textContent = pres;
+  const fogoEl = document.getElementById('fogoVal');
+  if(fogoEl) fogoEl.textContent = fogoStr;
+  // Mobile
+  const sdtemp = document.getElementById('sdtemp');
+  if(sdtemp) sdtemp.textContent = `🌡️ ${tempC}`;
+  const sdfum = document.getElementById('sdfumaca');
+  if(sdfum) sdfum.textContent = `💨 ${fum}`;
+  const sdpres = document.getElementById('sdpres');
+  if(sdpres) sdpres.textContent = `📊 ${pres}`;
+  const sdfogo = document.getElementById('sdfogo');
+  if(sdfogo) sdfogo.textContent = `🔥 ${fogoStr}`;
 }
 
-function updateSensorsUI(status) {
-  // Atualiza os elementos do painel desktop
-  const setSpan = (id, val, suffix='') => { const el = document.getElementById(id); if(el) el.textContent = (val !== undefined && val !== null) ? val + suffix : '--'; };
-  setSpan('tempVal', status.temperatura, ' °C');
-  setSpan('fumacaVal', status.fumaca, '');
-  setSpan('fogoVal', status.fogo !== undefined ? (status.fogo ? '🔥 DETECTADO' : '✅ NORMAL') : '--');
-  setSpan('pressaoVal', status.pressao, ' %');
-  setSpan('sireneVal', status.sirene !== undefined ? (status.sirene ? '🔊 ATIVA' : '🔇 DESLIGADA') : '--');
-  setSpan('bombaVal', status.bomba !== undefined ? (status.bomba ? '💧 LIGADA' : '⭕ DESLIGADA') : '--');
-  setSpan('estadoVal', status.estado || '--');
-  if (status.mqtt !== undefined) {
-    const mqttEl = document.getElementById('dmqtt');
-    if (mqttEl) {
-      mqttEl.textContent = status.mqtt ? 'ATIVO' : 'OFFLINE';
-      mqttEl.className = status.mqtt ? 'dval' : 'dval off';
-    }
-  }
-  // Atualiza strip mobile
-  const stripSensors = document.getElementById('stripSensors');
-  if (stripSensors) {
-    stripSensors.innerHTML = `
-      <div class="strip-sensor">🌡️ ${status.temperatura ?? '--'}°C</div>
-      <div class="strip-sensor">💨 ${status.fumaca ?? '--'}ppm</div>
-      <div class="strip-sensor">🔥 ${status.fogo ? 'FOGO' : 'normal'}</div>
-      <div class="strip-sensor">⚙️ ${status.pressao ?? '--'}%</div>
-    `;
-  }
-}
-
-/* ═══════════════════════════════════════════
-   POLLING REAL DO ESP32 (sensores + atuadores)
-═══════════════════════════════════════════ */
+/* POLLING DOS SENSORES (e LED/Servo) */
 async function pollHardwareStatus() {
   try {
     const r = await fetch(STATUS_URL, { cache: 'no-store' });
     if (!r.ok) return;
     const data = await r.json();
-    // Atualiza o estado interno
-    if (data.temperatura !== undefined) lastStatus.temperatura = data.temperatura;
-    if (data.fumaca !== undefined) lastStatus.fumaca = data.fumaca;
-    if (data.fogo !== undefined) lastStatus.fogo = data.fogo;
-    if (data.pressao !== undefined) lastStatus.pressao = data.pressao;
-    if (data.sirene !== undefined) lastStatus.sirene = data.sirene;
-    if (data.bomba !== undefined) lastStatus.bomba = data.bomba;
-    if (data.estado !== undefined) lastStatus.estado = data.estado;
-    if (data.mqtt !== undefined) lastStatus.mqtt = data.mqtt;
-    // LED e servo
+
+    // LED / Servo (original)
     if (data.led !== undefined) {
-      const isOn = (data.led === 'on' || data.led === true);
-      if ((isOn && lastStatus.led !== 'on') || (!isOn && lastStatus.led !== 'off'))
-        updateDevices(isOn ? 'led_on' : 'led_off', null);
-      else lastStatus.led = isOn ? 'on' : 'off';
+      const isOn = data.led === 'on' || data.led === true || data.led === 1;
+      updateDevs(isOn ? 'led_on' : 'led_off', null);
     }
     if (data.servo !== undefined) {
       const angle = parseInt(data.servo);
-      if (!isNaN(angle) && lastStatus.servo !== angle)
-        updateDevices('servo_angle', angle);
-      else lastStatus.servo = angle;
+      if (!isNaN(angle)) updateDevs('servo_angle', angle);
     }
-    updateSensorsUI(lastStatus);
-  } catch(e) { /* ESP32 offline, mantém último valor */ }
+    if (data.mqtt !== undefined) {
+      const mqttEl = document.getElementById('dmqtt');
+      if (mqttEl) {
+        mqttEl.textContent = data.mqtt ? 'ATIVO' : 'OFFLINE';
+        mqttEl.className   = data.mqtt ? 'dval' : 'dval off';
+      }
+    }
+
+    // NOVO: sensores
+    let updated = false;
+    if (data.temperatura !== undefined) { lastSensors.temperatura = parseFloat(data.temperatura); updated = true; }
+    if (data.fumaca !== undefined) { lastSensors.fumaca = parseFloat(data.fumaca); updated = true; }
+    if (data.pressao !== undefined) { lastSensors.pressao = parseFloat(data.pressao); updated = true; }
+    if (data.fogo !== undefined) { lastSensors.fogo = !!data.fogo; updated = true; }
+    if (updated) updateSensorUI();
+  } catch(e) { /* silencioso */ }
 }
-pollHardwareStatus();
-setInterval(pollHardwareStatus, STATUS_INTERVAL);
 
-/* ═══════════════════════════════════════════
-   PROCESSAMENTO DE PERGUNTAS SOBRE SENSORES
-═══════════════════════════════════════════ */
-function answerSensorQuery(text) {
-  const lower = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  // Se contém palavras-chave de consulta
-  const isQuery = /temperatura|fumaça|pressão|fogo|sirene|bomba|estado|sensor|mostre|qual|como está|valores|leituras/.test(lower);
-  if (!isQuery) return null;
+/* UI DE DISPOSITIVOS (LED e Servo) */
+function updateDevs(cmd, param) {
+  const rowLuz   = document.getElementById('drow-luz');
+  const rowServo = document.getElementById('drow-servo');
 
-  // Coleta valores atuais (últimos do polling)
-  const t = lastStatus.temperatura !== null ? lastStatus.temperatura.toFixed(1) : 'indisponível';
-  const f = lastStatus.fumaca !== null ? lastStatus.fumaca : 'indisponível';
-  const p = lastStatus.pressao !== null ? lastStatus.pressao : 'indisponível';
-  const fogoStr = lastStatus.fogo ? '🔥 detectado' : '✅ normal';
-  const sireneStr = lastStatus.sirene ? 'ligada' : 'desligada';
-  const bombaStr = lastStatus.bomba ? 'ligada' : 'desligada';
-  const estadoStr = lastStatus.estado || 'indeterminado';
-
-  // Resposta baseada nas palavras
-  let resposta = '';
-  if (/(temperatura|temp)/.test(lower)) resposta += `A temperatura atual é ${t} °C. `;
-  if (/(fumaça|fumaca|fumo|fuma)/.test(lower)) resposta += `O sensor de fumaça indica ${f} PPM. `;
-  if (/(pressão|pressao)/.test(lower)) resposta += `A pressão está em ${p} %. `;
-  if (/(fogo|chama|queim)/.test(lower)) resposta += `Fogo: ${fogoStr}. `;
-  if (/(sirene|alarme)/.test(lower)) resposta += `Sirene está ${sireneStr}. `;
-  if (/(bomba|água|resfri)/.test(lower)) resposta += `Bomba está ${bombaStr}. `;
-  if (/(estado|situação|situacao|modo)/.test(lower)) resposta += `Estado do sistema: ${estadoStr}. `;
-  if (/sensores|leituras|mostre tudo|valores/.test(lower)) {
-    resposta = `Leitura dos sensores: Temperatura ${t} °C, fumaça ${f} PPM, pressão ${p} %, fogo ${fogoStr}, sirene ${sireneStr}, bomba ${bombaStr}, estado ${estadoStr}.`;
+  if (cmd === 'led_on') {
+    const dluz = document.getElementById('dluz'); if(dluz) { dluz.textContent = 'LIGADA'; dluz.className = 'dval'; }
+    const sdluz = document.getElementById('sdluz'); if(sdluz) { sdluz.textContent = 'LUZ: ON'; sdluz.className = 'strip-dev on'; }
+    if(rowLuz) rowLuz.classList.add('active');
+  } else if (cmd === 'led_off') {
+    const dluz = document.getElementById('dluz'); if(dluz) { dluz.textContent = 'DESLIGADA'; dluz.className = 'dval off'; }
+    const sdluz = document.getElementById('sdluz'); if(sdluz) { sdluz.textContent = 'LUZ: OFF'; sdluz.className = 'strip-dev'; }
+    if(rowLuz) rowLuz.classList.remove('active');
+  } else if (cmd === 'servo_angle' && param !== null && param !== undefined) {
+    const a = param + '°';
+    const dservo = document.getElementById('dservo'); if(dservo) { dservo.textContent = a; dservo.className = param > 0 ? 'dval' : 'dval off'; }
+    const sdservo = document.getElementById('sdservo'); if(sdservo) { sdservo.textContent = 'SERVO: ' + a; sdservo.className = 'strip-dev' + (param > 0 ? ' on' : ''); }
+    if(rowServo) rowServo.classList.toggle('active', param > 0);
   }
-  if (resposta === '') resposta = `Temperatura ${t} °C, fumaça ${f} PPM, pressão ${p} %, fogo ${fogoStr}.`;
-  return resposta.trim();
 }
 
-/* ═══════════════════════════════════════════
-   PARSE LOCAL PARA CONTROLE (LED / SERVO)
-═══════════════════════════════════════════ */
-function parseLocalCommand(text) {
+/* DETECÇÃO DE PERGUNTAS SOBRE SENSORES (local) */
+function isSensorQuestion(text) {
   const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if (/acend|liga.*luz|luz.*liga|luz.*on|led.*on|lig.*led/.test(t))
-    return { cmd: 'led_on', param: null };
-  if (/apag|deslig.*luz|luz.*deslig|luz.*off|led.*off|deslig.*led/.test(t))
-    return { cmd: 'led_off', param: null };
-  const m = t.match(/(?:servo|gir|rot|pos|mov).*?(\d{1,3})|(\d{1,3}).*?(?:grau|servo|gir)/);
-  if (m) {
-    const angle = parseInt(m[1] || m[2]);
-    if (angle >= 0 && angle <= 180) return { cmd: 'servo_angle', param: angle };
-  }
-  return null;
+  return /temperatura|temp|fumaça|fumaca|pressão|pressao|fogo|status.*sensor|leituras|valores/.test(t);
 }
 
-/* ═══════════════════════════════════════════
-   ENVIO DE COMANDOS (CONTROLE) + CONSULTAS
-═══════════════════════════════════════════ */
-const msgsEl = document.getElementById('msgs');
+function answerSensorQuestion(questionText) {
+  const t = questionText.toLowerCase();
+  if (t.includes('temperatura') || t.includes('temp')) {
+    const val = lastSensors.temperatura !== null ? lastSensors.temperatura.toFixed(1) : 'indisponível';
+    return `A temperatura atual é de ${val} graus Celsius.`;
+  }
+  if (t.includes('fumaça') || t.includes('fumaca')) {
+    const val = lastSensors.fumaca !== null ? Math.round(lastSensors.fumaca) : 'indisponível';
+    return `O nível de fumaça está em ${val} partes por milhão.`;
+  }
+  if (t.includes('pressão') || t.includes('pressao')) {
+    const val = lastSensors.pressao !== null ? Math.round(lastSensors.pressao) : 'indisponível';
+    return `A pressão medida é de ${val} por cento.`;
+  }
+  if (t.includes('fogo')) {
+    const status = lastSensors.fogo === null ? 'indisponível' : (lastSensors.fogo ? 'DETECTADO' : 'normal');
+    return `Estado do fogo: ${status}.`;
+  }
+  // resposta genérica
+  let parts = [];
+  if (lastSensors.temperatura !== null) parts.push(`temperatura ${lastSensors.temperatura.toFixed(1)}°C`);
+  if (lastSensors.fumaca !== null) parts.push(`fumaça ${Math.round(lastSensors.fumaca)} ppm`);
+  if (lastSensors.pressao !== null) parts.push(`pressão ${Math.round(lastSensors.pressao)}%`);
+  if (lastSensors.fogo !== null) parts.push(`fogo ${lastSensors.fogo ? 'detectado' : 'normal'}`);
+  if (parts.length) return `Leituras atuais: ${parts.join(', ')}.`;
+  return `Não tenho dados dos sensores no momento. Verifique a conexão com o ESP32.`;
+}
+
+/* ENVIO DE COMANDOS / PERGUNTAS */
 function addMsg(text, role) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   const t = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
   d.innerHTML = `<div class="mav">${role==='user'?'EU':'AI'}</div><div><div class="mbub">${text}</div><div class="mtime">${t}</div></div>`;
-  msgsEl.appendChild(d);
-  msgsEl.scrollTop = msgsEl.scrollHeight;
+  document.getElementById('msgs').appendChild(d);
+  d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
 function setTyping(v) { document.getElementById('typing').className = 'typing' + (v ? ' on' : ''); }
 function showToast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 3000); }
 
@@ -859,19 +937,18 @@ async function send(text) {
   setState('thinking');
   document.getElementById('sbtn').disabled = true;
 
-  // 1. Verifica se é uma pergunta sobre sensores (responder localmente)
-  const sensorAnswer = answerSensorQuery(text);
-  if (sensorAnswer) {
+  // Verifica se é pergunta sobre sensores
+  if (isSensorQuestion(text)) {
     setTyping(false);
+    const answer = answerSensorQuestion(text);
     setState('speaking');
-    addMsg(sensorAnswer, 'assistant');
-    speak(sensorAnswer);
+    addMsg(answer, 'assistant');
+    speak(answer);
     document.getElementById('sbtn').disabled = false;
     return;
   }
 
-  // 2. Caso contrário, tenta enviar como comando de controle (LED/servo)
-  const local = parseLocalCommand(text);
+  // Comando de ação (LED, servo) ou pergunta não identificada -> envia para API
   try {
     const r = await fetch(getUrl(), {
       method: 'POST',
@@ -881,23 +958,14 @@ async function send(text) {
     const data = await r.json();
     setTyping(false);
     const resp = data.resposta || data.response || data.message || JSON.stringify(data);
-    if (data.comando) updateDevices(data.comando, data.parametro);
+    if (data.comando) updateDevs(data.comando, data.parametro);
     setState('speaking');
     addMsg(resp, 'assistant');
     speak(resp);
     showToast('✓ Processado');
   } catch(e) {
     setTyping(false);
-    let fallback;
-    if (local) {
-      if (local.cmd === 'led_on') fallback = 'Modo offline — luz ligada localmente.';
-      else if (local.cmd === 'led_off') fallback = 'Modo offline — luz desligada localmente.';
-      else if (local.cmd === 'servo_angle') fallback = `Modo offline — servo ajustado para ${local.param} graus localmente.`;
-      else fallback = 'Desculpe, não consegui conectar ao servidor.';
-      updateDevices(local.cmd, local.param);
-    } else {
-      fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique o endpoint da API.';
-    }
+    const fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique o backend.';
     setState('speaking');
     addMsg(fallback, 'assistant');
     speak(fallback);
@@ -907,9 +975,7 @@ async function send(text) {
   }
 }
 
-/* ═══════════════════════════════════════════
-   TTS — VOZES
-═══════════════════════════════════════════ */
+/* TTS e vozes */
 let voiceList = [];
 function populateVoiceList() {
   const all = window.speechSynthesis.getVoices();
@@ -921,48 +987,51 @@ function populateVoiceList() {
     const sel = document.getElementById(id);
     if (!sel) return;
     const prevVal = sel.value;
-    sel.innerHTML = sorted.map((v, idx) => `<option value="${idx}">${v.lang.startsWith('pt')?'🇧🇷 ':''}${v.name} (${v.lang})</option>`).join('');
+    sel.innerHTML = sorted.map(v => `<option value="${all.indexOf(v)}">${v.lang.startsWith('pt') ? '🇧🇷 ' : ''}${v.name} (${v.lang})</option>`).join('');
     if (prevVal && [...sel.options].some(o => o.value === prevVal)) sel.value = prevVal;
     else if (pt.length) sel.value = String(all.indexOf(pt[0]));
-    const idx = parseInt(sel.value);
-    if (!isNaN(idx) && all[idx]) currentVoice = all[idx];
+    if (!currentVoice && pt.length) currentVoice = pt[0];
   });
   return true;
 }
-function tryLoadVoices() { if (!populateVoiceList()) setTimeout(tryLoadVoices, 250); }
-window.speechSynthesis.onvoiceschanged = () => populateVoiceList();
+function tryLoadVoices() { if(!populateVoiceList()) setTimeout(tryLoadVoices, 250); }
+window.speechSynthesis.onvoiceschanged = () => { populateVoiceList(); };
 window.addEventListener('load', () => setTimeout(tryLoadVoices, 100));
 document.getElementById('voiceRefresh')?.addEventListener('click', () => { populateVoiceList(); showToast('✓ Vozes recarregadas'); });
 ['voiceSelect','voiceSelectM'].forEach(id => {
   document.getElementById(id)?.addEventListener('change', e => {
     const idx = parseInt(e.target.value);
     if (!isNaN(idx) && voiceList[idx]) currentVoice = voiceList[idx];
-    ['voiceSelect','voiceSelectM'].forEach(sid => { const s = document.getElementById(sid); if (s && s.id !== id) s.value = idx; });
+    ['voiceSelect','voiceSelectM'].forEach(sid => { const s = document.getElementById(sid); if(s && s.id !== id) s.value = idx; });
+    if(currentVoice) speak('Voz selecionada.');
   });
 });
+
 function speak(text) {
   if (!window.speechSynthesis) { setTimeout(() => setState('idle'), 2200); return; }
-  if (recog && wantListening) try { recog.stop(); } catch(e){}
+  if (recog && wantListening) { try { recog.stop(); } catch(e){} }
   isSpeaking = true;
-  const clean = text.replace(/<[^>]+>/g, '').replace(/[\u{1F000}-\u{1FFFF}]/gu, '').replace(/\s{2,}/g,' ').trim();
+  const clean = text.replace(/<[^>]+>/g, '').replace(/[\u{1F000}-\u{1FFFF}]/gu, '').replace(/\s{2,}/g, ' ').trim();
   const utt = new SpeechSynthesisUtterance(clean);
   utt.lang = 'pt-BR'; utt.rate = 1.0; utt.pitch = 1.12;
   if (currentVoice) utt.voice = currentVoice;
-  utt.onend = utt.onerror = () => { isSpeaking = false; setState('idle'); if (wantListening && recog) setTimeout(() => { if (wantListening && !isSpeaking) try { recog.start(); setState('listening'); } catch(e){} }, 800); };
+  utt.onend = () => { isSpeaking = false; setState('idle'); if (wantListening && recog) setTimeout(() => { if(wantListening && !isSpeaking) try{ recog.start(); setState('listening'); }catch(e){} }, 800); };
+  utt.onerror = () => { isSpeaking = false; setState('idle'); };
   window.speechSynthesis.speak(utt);
 }
 
-/* ═══════════════════════════════════════════
-   RECONHECIMENTO DE VOZ
-═══════════════════════════════════════════ */
+/* RECONHECIMENTO DE VOZ */
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recog = new SR();
-  recog.lang = 'pt-BR'; recog.continuous = true; recog.interimResults = false;
+  recog.lang = 'pt-BR';
+  recog.continuous = true;
+  recog.interimResults = false;
   recog.onresult = e => { const t = e.results[e.results.length-1][0].transcript; document.getElementById('tinput').value = t; send(t); };
   recog.onend = () => { if (wantListening && !isSpeaking) try { recog.start(); } catch(e){} };
   recog.onerror = () => { if (wantListening && !isSpeaking) setTimeout(() => { try { recog.start(); } catch(e){} }, 500); };
 }
+
 document.getElementById('vbtn').addEventListener('click', () => {
   if (!recog) { showToast('Voz não suportada'); return; }
   if (wantListening) {
@@ -981,12 +1050,14 @@ document.getElementById('vbtn').addEventListener('click', () => {
   }
 });
 
-/* ═══════════════════════════════════════════
-   EVENTOS DE TEXTO
-═══════════════════════════════════════════ */
-document.getElementById('sbtn').addEventListener('click', () => { const v = document.getElementById('tinput').value.trim(); if (v) send(v); });
-document.getElementById('tinput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = e.target.value.trim(); if (v) send(v); } });
+/* EVENTOS DE TEXTO */
+document.getElementById('sbtn').addEventListener('click', () => { const v = document.getElementById('tinput').value.trim(); if(v) send(v); });
+document.getElementById('tinput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = e.target.value.trim(); if(v) send(v); } });
 document.getElementById('tinput').addEventListener('input', e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 90) + 'px'; });
+
+/* INICIALIZAÇÃO */
+pollHardwareStatus();
+setInterval(pollHardwareStatus, STATUS_INTERVAL);
 </script>
 </body>
 </html>

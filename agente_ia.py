@@ -99,12 +99,12 @@ agente_casa = Agent(
         1. SEMPRE que o usuário pedir para ligar ou desligar a luz, acione a ferramenta com comando='led_on' ou 'led_off'.
         2. SEMPRE que o usuário pedir para mover o servo (girar, posicionar, ângulo), use comando='servo_angle' e passe o ângulo no parâmetro.
         3. Se o comando não for claro ou faltar informação (ex: 'gire o servo' sem ângulo), pergunte educadamente o que falta.
-        4. Após executar o comando, responda de forma natural e confirme a ação (ex: 'Prontinho! A luz foi acesa.').
+        4. Após executar o comando, responda de forma natural e confirme a ação (ex: 'Prontinho! A luz foi acesa.(PODE VARIAR ESTA FRASE A VONTADE!)').
         5. Se o usuário pedir algo que você não pode fazer, explique que ainda não aprendeu aquilo e sugira os comandos disponíveis.
 
         EXEMPLOS DE INTERPRETAÇÃO:
-        - "acende a luz", "liga a lâmpada", "pode acender a luz?" → comando='led_on'
-        - "apaga a luz", "desliga", "apaga tudo" (se contexto for luz) → comando='led_off'
+        - "acende a luz", "liga a lâmpada", "pode acender a luz?", "1" → comando='led_on'
+        - "apaga a luz", "desliga", "apaga tudo", "0", "esta claro aqui" (se contexto for luz) → comando='led_off'
         - "gira o servo pra 45 graus", "posiciona em 90°", "ângulo 30" → comando='servo_angle', parametro='45' (ou o número informado)
         - "está escuro aqui" → entenda como pedido para ligar a luz.
         - "quero ler" → se não houver tool específica, avise que não pode ajudar com isso ainda.

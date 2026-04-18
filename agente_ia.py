@@ -195,9 +195,8 @@ agente_casa = Agent(
     name="ARIA",
     model=model,
     tools=[controlar_esp32, ler_sensores],
-    # Sem histórico: cada pergunta é independente, garantindo que
-    # ler_sensores seja sempre chamada com dados frescos do cache.
-    add_history_to_messages=False,
+    # Sem histórico: cada pergunta é independente
+    num_history_messages=0,
     instructions="""
 Você é a ARIA, assistente residencial inteligente, simpática e objetiva.
 

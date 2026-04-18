@@ -53,8 +53,13 @@ def on_message(client, userdata, msg):
         print(f"[MQTT] Erro ao parsear telemetria: {e}")
 
 def start_mqtt_subscriber():
-    """Loop de subscriber MQTT com reconexão automática."""
-    client = mqtt.Client(client_id="ARIA_Server_Sub", clean_session=True)
+    """Loop de subscriber MQTT com reconexão automática — compatível paho 2.x."""
+    # paho-mqtt 2.x exige CallbackAPIVersion explícito
+    client = mqtt.Client(
+        callback_api_version=mqtt.CallbackAPIVersion.VERSION1,
+        client_id="ARIA_Server_Sub",
+        clean_session=True
+    )
     client.on_connect    = on_connect
     client.on_disconnect = on_disconnect
     client.on_message    = on_message

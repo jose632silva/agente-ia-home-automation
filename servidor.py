@@ -80,13 +80,34 @@ CORS(app)
 # ── /api/comando ──────────────────────────────────────────────────────────
 @app.route("/api/comando", methods=["POST"])
 def comando():
+    from datetime import datetime
     data     = request.get_json(force=True)
     mensagem = data.get("mensagem", "").strip()
     if not mensagem:
         return jsonify({"resposta": "Mensagem vazia."}), 400
     try:
-        resposta        = agente_casa.run(mensagem)
-        texto_resposta  = resposta.content
+        # Injeta snapshot dos sensores direto no prompt — dados sempre frescos,
+        # sem depender de cache interno do agente.
+        s = dict(sensor_cache)
+        agora = datetime.now().strftime("%H:%M:%S")
+
+        temp_str = (f"{s.get('temperatura',-127):.1f}°C"
+                    if s.get("temperatura") not in (None, -127)
+                    else "sensor desconectado")
+
+        snapshot = (
+            f"\n\n[SNAPSHOT SENSORES @ {agora}]\n"
+            f"led={s.get('led','?')}  servo={s.get('servo',0)}°\n"
+            f"temperatura={temp_str}  fumaca={s.get('fumaca',0):.0f}ppm\n"
+            f"fogo={s.get('fogo','normal')}  pressao={s.get('pressao',0)}kPa\n"
+            f"estado={s.get('estado','NORMAL')}  "
+            f"sirene={'ativa' if s.get('sirene') else 'inativa'}  "
+            f"bomba={s.get('bomba','Desligado')}\n"
+            f"[USE ESTES VALORES para responder perguntas sobre sensores]"
+        )
+
+        resposta = agente_casa.run(mensagem + snapshot)
+        texto_resposta = resposta.content
         return jsonify({"resposta": texto_resposta})
     except Exception as e:
         traceback.print_exc()

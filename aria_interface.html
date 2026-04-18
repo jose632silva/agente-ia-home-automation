@@ -483,16 +483,77 @@
 </div><!-- main -->
 <div class="toast" id="toast"></div>
 
+
+<!-- MQTT.js via CDN — assina telemetria direto no browser via WebSocket -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.0.5/mqtt.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════ */
-const getUrl    = () => '/api/comando';
-const STATUS_URL     = '/api/status';
-const STATUS_INTERVAL = 3000;
+const getUrl = () => '/api/comando';
+
+// Sensores mais recentes recebidos do MQTT — enviados junto com cada mensagem
+let latestSensors = {};
 
 let wantListening = false, isSpeaking = false;
 let recog = null, currentVoice = null, speakTimer = null, blinkTimer = null;
+
+/* ═══════════════════════════════════════════
+   MQTT WEBSOCKET — browser assina direto
+   wss = obrigatório em páginas HTTPS (Render)
+═══════════════════════════════════════════ */
+function initMQTT() {
+  const clientId = 'aria_ui_' + Math.random().toString(16).slice(2, 10);
+  const mqttUrl  = 'wss://broker.emqx.io:8084/mqtt';
+
+  let mqttClient;
+  try {
+    mqttClient = mqtt.connect(mqttUrl, {
+      clientId,
+      clean: true,
+      reconnectPeriod: 3000,
+      connectTimeout: 10000,
+    });
+  } catch(e) {
+    console.warn('MQTT.js não disponível:', e);
+    return;
+  }
+
+  mqttClient.on('connect', () => {
+    console.log('[MQTT] Conectado via WebSocket');
+    mqttClient.subscribe('jrsilva/telemetria', { qos: 0 });
+    setDval('dmqtt', 'ATIVO', '');
+    setDrow('drow-mqtt', true);
+  });
+
+  mqttClient.on('reconnect', () => {
+    setDval('dmqtt', 'RECONECT...', 'warn');
+    setDrow('drow-mqtt', false, 'warn');
+  });
+
+  mqttClient.on('offline', () => {
+    setDval('dmqtt', 'OFFLINE', 'off');
+    setDrow('drow-mqtt', false);
+  });
+
+  mqttClient.on('error', (err) => {
+    console.warn('[MQTT] Erro:', err.message);
+    setDval('dmqtt', 'ERRO', 'off');
+  });
+
+  mqttClient.on('message', (topic, message) => {
+    try {
+      const data = JSON.parse(message.toString());
+      latestSensors = { ...latestSensors, ...data };
+      updateAll(data);
+    } catch(e) {
+      console.warn('[MQTT] Parse error:', e);
+    }
+  });
+}
+
+// Inicia conexão MQTT quando a página carregar
+window.addEventListener('load', initMQTT);
 
 /* ═══════════════════════════════════════════
    SVG helpers — desktop + mobile simultâneo
@@ -571,7 +632,6 @@ function setDval(id, text, cls) {
 }
 
 function updateAll(data) {
-  // ── LED ──
   if(data.led !== undefined) {
     const on = data.led === 'on' || data.led === true || data.led === 1;
     setDval('dluz', on ? 'LIGADA' : 'DESLIGADA', on ? '' : 'off');
@@ -580,67 +640,50 @@ function updateAll(data) {
     if(sdluz) { sdluz.textContent = 'LUZ: ' + (on ? 'ON' : 'OFF');
                 sdluz.className = 'strip-dev' + (on ? ' on' : ''); }
   }
-
-  // ── SERVO ──
   if(data.servo !== undefined) {
     const a = parseInt(data.servo);
     setDval('dservo', a + '°', a > 0 ? '' : 'off');
     setDrow('drow-servo', a > 0);
   }
-
-  // ── SIRENE ──
   if(data.sirene !== undefined) {
     const on = data.sirene === 1 || data.sirene === true;
     setDval('dsirene', on ? 'ATIVA' : 'INATIVA', on ? 'alert' : 'off');
     setDrow('drow-sirene', false, on ? 'alert' : null);
   }
-
-  // ── BOMBA ──
   if(data.bomba !== undefined) {
     const on = data.bomba === 'Ligado' || data.bomba === true;
     setDval('dbomba', on ? 'LIGADA' : 'DESLIGADA', on ? '' : 'off');
     setDrow('drow-bomba', on);
   }
-
-  // ── TEMPERATURA ──
   if(data.temperatura !== undefined) {
     const t = parseFloat(data.temperatura);
     const txt = (t === -127 || isNaN(t)) ? 'ERRO' : t.toFixed(1) + '°C';
     const cls = t >= 50 ? 'alert' : (t >= 40 ? 'warn' : '');
     setDval('dtemp', txt, cls || (t < 0 ? 'off' : ''));
     setDrow('drow-temp', !cls, cls || null);
-    // mobile badge
     const sdtemp = document.getElementById('sdtemp');
     if(sdtemp) {
       sdtemp.textContent = 'TEMP: ' + (isNaN(t) || t === -127 ? '--' : t.toFixed(0) + '°');
       sdtemp.className = 'strip-dev' + (cls === 'alert' ? ' alert' : cls === 'warn' ? ' warn' : ' on');
     }
   }
-
-  // ── FUMAÇA ──
   if(data.fumaca !== undefined) {
     const ppm = parseFloat(data.fumaca);
     const cls = ppm >= 1000 ? 'alert' : (ppm >= 300 ? 'warn' : '');
     setDval('dfumaca', ppm.toFixed(0) + ' PPM', cls || (ppm < 1 ? 'off' : ''));
     setDrow('drow-fumaca', false, cls || null);
   }
-
-  // ── FOGO ──
   if(data.fogo !== undefined) {
     const det = data.fogo !== 'normal' && data.fogo !== false;
     setDval('dfogo', det ? 'DETECTADO' : 'NORMAL', det ? 'alert' : 'off');
     setDrow('drow-fogo', false, det ? 'alert' : null);
   }
-
-  // ── PRESSÃO ──
   if(data.pressao !== undefined) {
     const p = parseFloat(data.pressao);
     const cls = p < 30 ? 'warn' : '';
     setDval('dpressao', p.toFixed(0) + ' kPa', cls || (p <= 0 ? 'off' : ''));
     setDrow('drow-pressao', p >= 30, cls || null);
   }
-
-  // ── ESTADO ──
   if(data.estado !== undefined) {
     const e = String(data.estado).toUpperCase();
     const cls = e === 'CRITICO' ? 'alert' : e === 'ALARME' ? 'alert' : e === 'PRE_ALARME' ? 'warn' : '';
@@ -648,29 +691,9 @@ function updateAll(data) {
     setDrow('drow-estado', !cls, cls || null);
     const sde = document.getElementById('sdestado');
     if(sde) { sde.textContent = e;
-               sde.className = 'strip-dev' + (cls === 'alert' ? ' alert' : cls === 'warn' ? ' warn' : ' on'); }
-  }
-
-  // ── MQTT ──
-  if(data.mqtt !== undefined) {
-    const on = data.mqtt === true || data.mqtt === 'true';
-    setDval('dmqtt', on ? 'ATIVO' : 'OFFLINE', on ? '' : 'off');
-    setDrow('drow-mqtt', on);
+              sde.className = 'strip-dev' + (cls === 'alert' ? ' alert' : cls === 'warn' ? ' warn' : ' on'); }
   }
 }
-
-/* ═══════════════════════════════════════════
-   POLLING ESP32 — leitura real
-═══════════════════════════════════════════ */
-async function pollHardwareStatus() {
-  try {
-    const r = await fetch(STATUS_URL, { cache: 'no-store' });
-    if(!r.ok) return;
-    updateAll(await r.json());
-  } catch(e) { /* silencioso — ESP32 pode estar offline */ }
-}
-pollHardwareStatus();
-setInterval(pollHardwareStatus, STATUS_INTERVAL);
 
 /* ═══════════════════════════════════════════
    CHAT helpers
@@ -746,18 +769,15 @@ function speak(text) {
   if(!window.speechSynthesis) { setTimeout(() => setState('idle'), 2200); return; }
   if(recog && wantListening) { try { recog.stop(); } catch(e){} }
   isSpeaking = true;
-
   const clean = text
     .replace(/<[^>]+>/g, '')
     .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
     .replace(/[\u{2600}-\u{27BF}]/gu, '')
     .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
     .replace(/\s{2,}/g, ' ').trim();
-
   const utt = new SpeechSynthesisUtterance(clean);
   utt.lang = 'pt-BR'; utt.rate = 1.0; utt.pitch = 1.12;
   if(currentVoice) utt.voice = currentVoice;
-
   function after() {
     isSpeaking = false; setState('idle');
     if(wantListening && recog) {
@@ -801,7 +821,7 @@ document.getElementById('vbtn').addEventListener('click', () => {
 });
 
 /* ═══════════════════════════════════════════
-   ENVIO
+   ENVIO — inclui sensores atuais do MQTT
 ═══════════════════════════════════════════ */
 async function send(text) {
   if(!text.trim()) return;
@@ -812,9 +832,11 @@ async function send(text) {
   document.getElementById('sbtn').disabled = true;
 
   try {
-    const r    = await fetch(getUrl(), {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({mensagem: text})
+    const r = await fetch(getUrl(), {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      // ← sensores sempre frescos do MQTT WebSocket
+      body: JSON.stringify({ mensagem: text, sensores: latestSensors })
     });
     const data = await r.json();
     setTyping(false);
@@ -822,13 +844,10 @@ async function send(text) {
     setState('speaking');
     addMsg(resp, 'assistant');
     speak(resp);
-    // Força polling imediato após comando para atualizar UI mais rápido
-    setTimeout(pollHardwareStatus, 600);
-    setTimeout(pollHardwareStatus, 1800);
     showToast('Processado');
   } catch(e) {
     setTyping(false);
-    const fallback = 'Desculpe, não consegui me conectar ao servidor. Verifique se o servidor está rodando.';
+    const fallback = 'Desculpe, não consegui me conectar ao servidor.';
     setState('speaking');
     addMsg(fallback, 'assistant');
     speak(fallback);

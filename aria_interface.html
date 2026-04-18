@@ -566,12 +566,7 @@ function setDrow(id, active, extra) {
 function setDval(id, text, cls) {
   const e = document.getElementById(id);
   if(!e) return;
-  // Remove qualquer ** do texto antes de exibir
-  let cleanText = text;
-  if (typeof cleanText === 'string') {
-    cleanText = cleanText.replace(/\*\*/g, '');
-  }
-  e.textContent = cleanText;
+  e.textContent = text;
   e.className   = 'dval' + (cls ? ' '+cls : '');
 }
 
@@ -683,16 +678,11 @@ setInterval(pollHardwareStatus, STATUS_INTERVAL);
 const msgsEl = document.getElementById('msgs');
 
 function addMsg(text, role) {
-  let displayText = text;
-  if (role === 'assistant') {
-    // Remove ** que aparecem antes dos valores nos relatórios
-    displayText = displayText.replace(/\*\*/g, '');
-  }
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   const t = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   d.innerHTML = `<div class="mav">${role==='user'?'EU':'AI'}</div>
-    <div><div class="mbub">${displayText}</div><div class="mtime">${t}</div></div>`;
+    <div><div class="mbub">${text}</div><div class="mtime">${t}</div></div>`;
   msgsEl.appendChild(d);
   msgsEl.scrollTop = msgsEl.scrollHeight;
 }

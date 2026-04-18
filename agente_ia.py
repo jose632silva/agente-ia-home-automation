@@ -5,6 +5,7 @@ Controla LED/servo e responde perguntas sobre sensores do ESP32.
 import os
 import json
 import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
 from dotenv import load_dotenv
 
 from agno.agent import Agent
@@ -91,6 +92,7 @@ def controlar_esp32(comando: str, parametro: str = "") -> str:
             payload=payload_str,
             hostname=MQTT_BROKER,
             port=MQTT_PORT,
+            protocol=mqtt.MQTTv311,   # força protocolo explícito no paho 2.x
         )
         # Atualiza cache local imediatamente (confirmação otimista)
         if comando == "led_on":
